@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class LevelSwitch : MonoBehaviour
@@ -28,8 +29,11 @@ public class LevelSwitch : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Tab)) { VisualizeLevel(); }
-        if(Input.GetKeyUp(KeyCode.Tab)&&LevelSwitchIsLegal()) { SwitchLevel(); }
+        if(Input.GetKey(KeyCode.Tab)) { VisualizeLevel(); }
+        if(Input.GetKeyUp(KeyCode.Tab)) {
+            UnVisualizeLevel();
+            if(LevelSwitchIsLegal())SwitchLevel(); 
+        }
     }
 
     private bool LevelSwitchIsLegal()
@@ -39,12 +43,86 @@ public class LevelSwitch : MonoBehaviour
 
     private void VisualizeLevel()
     {
-        throw new NotImplementedException();
+        List<GameObject> _outList;
+        List<GameObject> _inList;
+
+        if (m_inRealSpace)
+        {
+            _inList = m_staticRealspaceObjects;
+            _outList = m_staticOtherspaceObjects;
+        }
+        else
+        {
+            _inList = m_staticOtherspaceObjects;
+            _outList = m_staticRealspaceObjects;
+        }
+
+        foreach (GameObject obj in _outList)
+        {
+            obj.layer = 8;
+            if(obj.GetComponent<Renderer>())
+            {
+                MaterialExtensions.ToFadeMode(obj.GetComponent<Renderer>().material);
+                Color c = Color.green;
+                c.a = 0.2f;
+                obj.GetComponent<Renderer>().material.color = c;
+            }
+        }
+
+        foreach (GameObject obj in _inList)
+        {
+            if (obj.GetComponent<Renderer>())
+            {
+                Color c = Color.red;
+                c.a = 1f;
+                obj.GetComponent<Renderer>().material.color = c;
+            }
+        }
+    }
+
+    private void UnVisualizeLevel()
+    {
+        List<GameObject> _outList;
+        List<GameObject> _inList;
+
+        if (m_inRealSpace)
+        {
+            _inList = m_staticRealspaceObjects;
+            _outList = m_staticOtherspaceObjects;
+        }
+        else
+        {
+            _inList = m_staticOtherspaceObjects;
+            _outList = m_staticRealspaceObjects;
+        }
+
+        foreach (GameObject obj in _outList)
+        {
+            obj.layer = 7;
+            if (obj.GetComponent<Renderer>())
+            {
+                MaterialExtensions.ToOpaqueMode(obj.GetComponent<Renderer>().material);
+                Color c = Color.white;
+                c.a = 1f;
+                obj.GetComponent<Renderer>().material.color = c;
+            }
+        }
+
+        foreach (GameObject obj in _inList)
+        {
+            if (obj.GetComponent<Renderer>())
+            {
+                Color c = Color.white;
+                c.a = 1f;
+                obj.GetComponent<Renderer>().material.color = c;
+            }
+        }
     }
 
     public void SwitchLevel()
     {
         m_inRealSpace = !m_inRealSpace;
+
         List<GameObject> _inList;
         List<GameObject> _outList;
 
@@ -60,11 +138,13 @@ public class LevelSwitch : MonoBehaviour
             RenderSettings.skybox = m_otherspaceSkybox;
             RenderSettings.ambientSkyColor = m_otherspaceShadowColor;
         }
+
         foreach (GameObject obj in _inList) {
             if(obj.GetComponent<Collider>()) obj.GetComponent<Collider>().isTrigger = false;
             if (obj.GetComponent<Light>()) obj.GetComponent<Light>().enabled = true;
             obj.layer = 6;
         }
+
         foreach (GameObject obj in _outList)
         {
             if (obj.GetComponent<Collider>()) obj.GetComponent<Collider>().isTrigger = true;

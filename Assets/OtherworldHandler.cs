@@ -17,11 +17,11 @@ public class OtherworldHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other != null&&other.gameObject.layer == 7) { m_insideObjects += 1; }
+        if (other != null&&other.gameObject.layer >= 7) { m_insideObjects += 1; }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other != null && other.gameObject.layer == 7) { m_insideObjects -= 1; }
+        if (other != null && other.gameObject.layer >= 7) { m_insideObjects -= 1; }
     }
 }

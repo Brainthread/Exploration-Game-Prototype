@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace CapsuleController
@@ -22,7 +23,7 @@ namespace CapsuleController
 
 
         private Vector3 m_moveInput;
-        private bool m_isSprinting;
+        private bool m_isRunning;
         private float m_speedFactor = 1f;
         private float m_maxAccelForceFactor = 1f;
         private Vector3 m_GoalVel = Vector3.zero;
@@ -34,12 +35,16 @@ namespace CapsuleController
         private bool m_jumpReady = true;
         private bool m_isJumping = false;
 
+        private int m_airJumpCounter = 0;
+
         [Header("Grounded State:")]
         [SerializeField] private AnimationCurve m_accelerationFactorFromDot;
         [SerializeField] private AnimationCurve m_maxAccelerationForceFactorFromDot;
         [SerializeField] private Vector3 m_moveForceScale = new Vector3(1f, 0f, 1f);
+
         [SerializeField] private Locomotion walkLocomotion;
         [SerializeField] private Locomotion runLocomotion;
+        [SerializeField] private Locomotion aerialLocomotion;
 
 
         [Header("Jump:")]
@@ -50,6 +55,7 @@ namespace CapsuleController
         [SerializeField] private float m_jumpBuffer = 0.15f;
         [SerializeField] private float m_coyoteTime = 0.25f;
         [SerializeField] private LayerMask m_whatIsGround;
+        [SerializeField] private int m_airJumps = 2;
 
         [System.Serializable]
         public class Locomotion
@@ -81,11 +87,12 @@ namespace CapsuleController
         public Vector3 MoveForceScale { get { return m_moveForceScale; } }
         public float MaxAccelerationForceFactor { get { return m_maxAccelForceFactor; } }
         public Locomotion WalkLocomotion { get { return walkLocomotion; } }
-        public Locomotion RunLocomotion { get { return walkLocomotion; } }
+        public Locomotion RunLocomotion { get { return runLocomotion; } }
+        public Locomotion AerialLocomotion { get { return aerialLocomotion; }}
 
 
         public Vector3 MoveInput { get { return m_moveInput; } }
-        public bool IsRunning { get { return m_isSprinting; } }
+        public bool IsRunning { get { return m_isRunning; } }
 
         public float FallGravityFactor { get { return m_fallGravityFactor; } }
 
@@ -98,8 +105,12 @@ namespace CapsuleController
         public float JumpForceFactor { get { return m_jumpForceFactor;} }
         public float TimeSinceJump { get { return m_timeSinceJump; } set { m_timeSinceJump = value; } }
 
+        public int AirJumpNumber { get { return m_airJumps; } }
+        public int AirJumpCounter { get { return m_airJumpCounter; } }
+
         void Awake()
         {
+            m_airJumpCounter = 0;
             m_rigidbody = GetComponent<Rigidbody>();
             m_gravitationalForce = Physics.gravity * m_rigidbody.mass;
             m_states = new PlayerStateFactory(this);
@@ -117,7 +128,7 @@ namespace CapsuleController
                 m_timeSinceJump += Time.deltaTime;
 
             m_moveInput = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
-            m_isSprinting = Input.GetButton("Sprint");
+            m_isRunning = Input.GetButton("Sprint");
             if(Input.GetButtonDown("Jump"))
             {
                 m_timeSinceJumpPressed = 0;
@@ -151,7 +162,7 @@ namespace CapsuleController
 
         public void GetSprintInput(bool _isSprinting)
         {
-            m_isSprinting = _isSprinting;
+            m_isRunning = _isSprinting;
         }
 
 

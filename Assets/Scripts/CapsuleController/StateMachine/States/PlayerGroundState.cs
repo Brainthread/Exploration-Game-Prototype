@@ -27,7 +27,10 @@ namespace CapsuleController
         }
         public override void FixedUpdateState(){
             (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
+            Debug.Log(_context.RunLocomotion.maxSpeed + " " + _context.WalkLocomotion.maxSpeed);
             PlayerStateMachine.Locomotion locomotion = _context.IsRunning ? _context.RunLocomotion : _context.WalkLocomotion;
+            Debug.Log(Time.time + " " + _context.IsRunning);
+
             if (!_context.CheckIfGrounded(rayHitGround, rayHit)) SwitchState(_factory.Aerial());
             if (_context.ShouldMaintainHeight) MaintainHeight(rayHit, Vector3.down);
             Move(rayHit, locomotion);

@@ -5,8 +5,9 @@ namespace CapsuleController
     public class PlayerGroundState : PlayerBaseState
     {
         public PlayerGroundState(PlayerStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
-        public override void EnterState() { 
-        
+        public override void EnterState() {
+            _context.ShouldMaintainHeight = true;
+            _context.JumpReady = true;
         }
         public override void UpdateState() { 
         
@@ -26,6 +27,8 @@ namespace CapsuleController
             if (!_context.CheckIfGrounded(rayHitGround, rayHit)) SwitchState(_factory.Aerial());
             if (_context.ShouldMaintainHeight) MaintainHeight(rayHit, Vector3.down);
             Move(rayHit, locomotion);
+            if(_context.TimeSinceJumpPressed<_context.JumpBuffer)
+                SwitchState(_factory.Jump());
         }
 
         private void MaintainHeight(RaycastHit rayHit, Vector3 rayDirection)

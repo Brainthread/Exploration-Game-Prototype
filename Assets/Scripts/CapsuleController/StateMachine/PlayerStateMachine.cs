@@ -11,7 +11,6 @@ namespace CapsuleController
         private Rigidbody m_rigidbody;
         private Vector3 m_gravitationalForce;
         private Vector3 m_rayDir = Vector3.down;
-        private Vector2 m_moveContext;
 
         private bool m_shouldMaintainHeight = true;
 
@@ -88,11 +87,16 @@ namespace CapsuleController
         public Vector3 MoveInput { get { return m_moveInput; } }
         public bool IsRunning { get { return m_isSprinting; } }
 
+        public float FallGravityFactor { get { return m_fallGravityFactor; } }
 
         public bool JumpReady { get { return m_jumpReady; } set { m_jumpReady = value; } }
-
-
-        public float FallGravityFactor { get { return m_fallGravityFactor; } }
+        public float TimeSinceJumpPressed { get { return m_timeSinceJumpPressed;} set { m_timeSinceJumpPressed = value; } }
+        public float JumpBuffer { get { return m_jumpBuffer; } }
+        public float TimeSinceUngrounded { get { return m_timeSinceUngrounded;}set{m_timeSinceUngrounded = value; } }
+        public float CoyoteTime { get { return m_coyoteTime;} }
+        public bool IsJumping { get { return m_isJumping;} set { m_isJumping = value;} }
+        public float JumpForceFactor { get { return m_jumpForceFactor;} }
+        public float TimeSinceJump { get { return m_timeSinceJump; } set { m_timeSinceJump = value; } }
 
         void Awake()
         {
@@ -101,12 +105,24 @@ namespace CapsuleController
             m_states = new PlayerStateFactory(this);
             m_currentState = m_states.Grounded();
             m_currentState.EnterState();
+            m_timeSinceJumpPressed = Mathf.Max(m_coyoteTime, m_jumpBuffer);
+            m_timeSinceJump = Mathf.Max(m_coyoteTime, m_jumpBuffer);
         }
 
         void Update()
         {
+            if(m_timeSinceJumpPressed < m_coyoteTime)
+                m_timeSinceJumpPressed += Time.deltaTime;
+            if (m_timeSinceJump < m_coyoteTime)
+                m_timeSinceJump += Time.deltaTime;
+
             m_moveInput = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
             m_isSprinting = Input.GetButton("Sprint");
+            if(Input.GetButtonDown("Jump"))
+            {
+                m_timeSinceJumpPressed = 0;
+                m_jumpInput = new Vector3(0, 1, 0);
+            }
 
             m_currentState.UpdateState();
         }

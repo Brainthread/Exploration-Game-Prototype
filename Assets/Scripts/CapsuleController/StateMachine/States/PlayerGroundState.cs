@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
 namespace CapsuleController
 {
@@ -8,12 +9,15 @@ namespace CapsuleController
         public override void EnterState() {
             _context.ShouldMaintainHeight = true;
             _context.JumpReady = true;
+            if (_context.TimeSinceJumpPressed < _context.JumpBuffer)
+                SwitchState(_factory.Jump());
         }
-        public override void UpdateState() { 
-        
+        public override void UpdateState() {
+            if (_context.TimeSinceJumpPressed < _context.JumpBuffer)
+                SwitchState(_factory.Jump());
         }
-        public override void ExitState() { 
-        
+        public override void ExitState() {
+            _context.ShouldMaintainHeight = false;
         }
         public override void CheckSwitchStates() { 
         
@@ -27,8 +31,7 @@ namespace CapsuleController
             if (!_context.CheckIfGrounded(rayHitGround, rayHit)) SwitchState(_factory.Aerial());
             if (_context.ShouldMaintainHeight) MaintainHeight(rayHit, Vector3.down);
             Move(rayHit, locomotion);
-            if(_context.TimeSinceJumpPressed<_context.JumpBuffer)
-                SwitchState(_factory.Jump());
+
         }
 
         private void MaintainHeight(RaycastHit rayHit, Vector3 rayDirection)

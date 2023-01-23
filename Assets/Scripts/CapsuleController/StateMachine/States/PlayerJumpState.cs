@@ -23,7 +23,7 @@ namespace CapsuleController
                         _context.PhysicsBody.position = new Vector3(_context.PhysicsBody.position.x, _context.PhysicsBody.position.y - (rayHit.distance - _context.LevitateHeight), _context.PhysicsBody.position.z);
                     }
                     _context.PhysicsBody.AddForce(Vector3.up * _context.JumpForceFactor, ForceMode.Impulse);
-                    _context.TimeSinceJumpPressed = 0f;
+                    _context.TimeSinceJumpPressed = _context.JumpBuffer;
                     _context.TimeSinceJump = 0f;
                 }
             }

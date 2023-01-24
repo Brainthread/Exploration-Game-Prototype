@@ -5,13 +5,27 @@ namespace CapsuleController
 {
     public class PlayerAerialState : PlayerBaseState
     {
-        public PlayerAerialState(PlayerStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
+        private Vector3 m_entryVelocity;
+        private float m_entryHeight;
+        public PlayerAerialState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
       
         public override void EnterState() {
-
+            if (_context.AirJumpCounter > 0)
+            {
+                _context.JumpReady = true;
+            }
+            m_entryVelocity = _context.PhysicsBody.velocity;
+            m_entryVelocity.y = 0;
+            m_entryHeight = _context.transform.position.y;
         }
         public override void UpdateState() {
-
+            if (_context.TimeSinceJumpPressed < _context.JumpBuffer && _context.AirJumpCounter > 0)
+            {
+                Debug.Log(_context.AirJumpCounter);
+                _context.AirJumpCounter--;
+                SwitchState(_factory.Jump());
+            }
+ 
         }
         public override void ExitState() { 
         
@@ -28,17 +42,21 @@ namespace CapsuleController
             if (_context.PhysicsBody.velocity.y < 0)
             {
                 HandleFall();
-                if (_context.CheckIfGrounded(rayHitGround, rayHit))
-                {
-                    Debug.Log("Go To Grounded");
-                    SwitchState(_factory.Grounded());
-                    return;
-                }
             }
             else if (_context.PhysicsBody.velocity.y > 0)
             {
                 HandleAscent();
             }
+
+            if (_context.PhysicsBody.velocity.y < 0 || _context.transform.position.y >= m_entryHeight + _context.LevitateHeight)
+            {
+                if (_context.CheckIfGrounded(rayHitGround, rayHit))
+                {
+                    SwitchState(_factory.Grounded());
+                    return;
+                }
+            }
+
             Move(rayHit, _context.AerialLocomotion);
         }
 
@@ -57,13 +75,14 @@ namespace CapsuleController
             //Do Something?
         }
 
-        private void Move(RaycastHit rayHit, PlayerStateMachine.Locomotion locomotion)
+        private void Move(RaycastHit rayHit, PlayerMovementStateMachine.Locomotion locomotion)
         {
             Vector3 m_UnitGoal = Vector3.ProjectOnPlane(_context.MoveInput, rayHit.normal).normalized;
+
             Vector3 unitVel = _context.GoalVelocity.normalized;
             float velDot = Vector3.Dot(m_UnitGoal, unitVel);
             float accel = locomotion.acceleration * _context.AccelerationFactorFromDot.Evaluate(velDot);
-            Vector3 goalVel = m_UnitGoal * locomotion.maxSpeed * _context.SpeedFactor;
+            Vector3 goalVel = m_UnitGoal * Mathf.Clamp(Vector3.ProjectOnPlane(_context.PhysicsBody.velocity, Vector3.up).magnitude, locomotion.maxSpeed, 10000) * _context.SpeedFactor;
             _context.GoalVelocity = Vector3.MoveTowards(_context.GoalVelocity,
                                             goalVel,
                                             accel * Time.fixedDeltaTime);

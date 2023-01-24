@@ -5,11 +5,11 @@ namespace CapsuleController
 {
     public class PlayerStateFactory
     {
-        PlayerStateMachine m_context;
+        PlayerMovementStateMachine m_context;
         private PlayerGroundState m_groundState;
         private PlayerAerialState m_aerialState;
         private PlayerJumpState m_jumpState;
-        public PlayerStateFactory(PlayerStateMachine context)
+        public PlayerStateFactory(PlayerMovementStateMachine context)
         {
             m_context = context;
             m_groundState = new PlayerGroundState(m_context, this);

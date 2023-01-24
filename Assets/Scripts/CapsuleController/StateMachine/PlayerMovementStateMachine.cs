@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEditorInternal;
 using UnityEngine;
 
 namespace CapsuleController
 {
-    public class PlayerStateMachine : MonoBehaviour
+    public class PlayerMovementStateMachine : MonoBehaviour
     {
         [Header("Common variables")]
         [SerializeField] private bool m_allowControl = true;
@@ -88,7 +89,7 @@ namespace CapsuleController
         public float MaxAccelerationForceFactor { get { return m_maxAccelForceFactor; } }
         public Locomotion WalkLocomotion { get { return walkLocomotion; } }
         public Locomotion RunLocomotion { get { return runLocomotion; } }
-        public Locomotion AerialLocomotion { get { return aerialLocomotion; }}
+        public Locomotion AerialLocomotion { get { return aerialLocomotion; } }
 
 
         public Vector3 MoveInput { get { return m_moveInput; } }
@@ -97,16 +98,16 @@ namespace CapsuleController
         public float FallGravityFactor { get { return m_fallGravityFactor; } }
 
         public bool JumpReady { get { return m_jumpReady; } set { m_jumpReady = value; } }
-        public float TimeSinceJumpPressed { get { return m_timeSinceJumpPressed;} set { m_timeSinceJumpPressed = value; } }
+        public float TimeSinceJumpPressed { get { return m_timeSinceJumpPressed; } set { m_timeSinceJumpPressed = value; } }
         public float JumpBuffer { get { return m_jumpBuffer; } }
-        public float TimeSinceUngrounded { get { return m_timeSinceUngrounded;}set{m_timeSinceUngrounded = value; } }
-        public float CoyoteTime { get { return m_coyoteTime;} }
-        public bool IsJumping { get { return m_isJumping;} set { m_isJumping = value;} }
-        public float JumpForceFactor { get { return m_jumpForceFactor;} }
+        public float TimeSinceUngrounded { get { return m_timeSinceUngrounded; } set { m_timeSinceUngrounded = value; } }
+        public float CoyoteTime { get { return m_coyoteTime; } }
+        public bool IsJumping { get { return m_isJumping; } set { m_isJumping = value; } }
+        public float JumpForceFactor { get { return m_jumpForceFactor; } }
         public float TimeSinceJump { get { return m_timeSinceJump; } set { m_timeSinceJump = value; } }
 
         public int AirJumpNumber { get { return m_airJumps; } }
-        public int AirJumpCounter { get { return m_airJumpCounter; } }
+        public int AirJumpCounter { get { return m_airJumpCounter; } set { m_airJumpCounter = value; } }
 
         void Awake()
         {
@@ -122,14 +123,14 @@ namespace CapsuleController
 
         void Update()
         {
-            if(m_timeSinceJumpPressed < m_coyoteTime)
+            if (m_timeSinceJumpPressed < m_coyoteTime)
                 m_timeSinceJumpPressed += Time.deltaTime;
             if (m_timeSinceJump < m_coyoteTime)
                 m_timeSinceJump += Time.deltaTime;
 
             m_moveInput = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
             m_isRunning = Input.GetButton("Sprint");
-            if(Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump"))
             {
                 m_timeSinceJumpPressed = 0;
                 m_jumpInput = new Vector3(0, 1, 0);
@@ -192,6 +193,5 @@ namespace CapsuleController
             bool rayHitGround = Physics.Raycast(rayToGround, out rayHit, m_rayToGroundLength, m_whatIsGround);
             return (rayHitGround, rayHit);
         }
-
     }
 }

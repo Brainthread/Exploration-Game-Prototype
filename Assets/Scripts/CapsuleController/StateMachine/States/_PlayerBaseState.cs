@@ -2,9 +2,9 @@
 {
     public abstract class PlayerBaseState
     {
-        protected PlayerStateMachine _context;
+        protected PlayerMovementStateMachine _context;
         protected PlayerStateFactory _factory;
-        public PlayerBaseState(PlayerStateMachine context, PlayerStateFactory factory)
+        public PlayerBaseState(PlayerMovementStateMachine context, PlayerStateFactory factory)
         {
             _context = context;
             _factory = factory;

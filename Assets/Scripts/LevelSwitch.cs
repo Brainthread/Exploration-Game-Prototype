@@ -32,7 +32,7 @@ public class LevelSwitch : MonoBehaviour
         if(Input.GetKey(KeyCode.Tab)) { VisualizeLevel(); }
         if(Input.GetKeyUp(KeyCode.Tab)) {
             UnVisualizeLevel();
-            if(LevelSwitchIsLegal())SwitchLevel(); 
+            if(LevelSwitchIsLegal()) SwitchLevel(); 
         }
     }
 

@@ -21,7 +21,6 @@ namespace CapsuleController
         public override void UpdateState() {
             if (_context.TimeSinceJumpPressed < _context.JumpBuffer && _context.AirJumpCounter > 0)
             {
-                Debug.Log(_context.AirJumpCounter);
                 _context.AirJumpCounter--;
                 SwitchState(_factory.Jump());
             }

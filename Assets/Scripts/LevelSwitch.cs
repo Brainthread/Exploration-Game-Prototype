@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LevelSwitch : MonoBehaviour
 {
+    [SerializeField] private int LAYEROFFSET;
     [SerializeField] private List<GameObject> m_staticRealspaceObjects;
     [SerializeField] private List<GameObject> m_staticOtherspaceObjects;
 
@@ -17,13 +19,33 @@ public class LevelSwitch : MonoBehaviour
     [SerializeField] private Material m_otherspaceSkybox;
     [SerializeField] private Color m_otherspaceShadowColor;
 
-    private bool m_inRealSpace = false;
+    private bool m_inRealSpace = true;
     private OtherworldHandler m_otherworldHandler;
     // Start is called before the first frame update
     void Start()
     {
+        m_inRealSpace = true;
         m_otherworldHandler = m_player.GetComponent<OtherworldHandler>();
-        SwitchLevel();
+        ChangeVisibility(1, false);
+    }
+
+    void ChangeVisibility(int group, bool visible)
+    {
+        print("Suffer");
+        List<GameObject> list = m_staticRealspaceObjects;
+        if(group != 0)
+        {
+            list = m_staticOtherspaceObjects;
+        }
+        foreach (GameObject obj in list)
+        {
+            if (obj.GetComponent<Collider>()) obj.GetComponent<Collider>().isTrigger = !visible;
+            if (obj.GetComponent<Light>()) obj.GetComponent<Light>().enabled = visible;
+            if (visible)
+                obj.layer -= LAYEROFFSET;
+            else
+                obj.layer += LAYEROFFSET;
+        }
     }
 
     // Update is called once per frame
@@ -59,7 +81,7 @@ public class LevelSwitch : MonoBehaviour
 
         foreach (GameObject obj in _outList)
         {
-            obj.layer = 8;
+            //obj.layer = 8;
             if(obj.GetComponent<Renderer>())
             {
                 MaterialExtensions.ToFadeMode(obj.GetComponent<Renderer>().material);
@@ -98,7 +120,7 @@ public class LevelSwitch : MonoBehaviour
 
         foreach (GameObject obj in _outList)
         {
-            obj.layer = 7;
+            //obj.layer = 7;
             if (obj.GetComponent<Renderer>())
             {
                 MaterialExtensions.ToOpaqueMode(obj.GetComponent<Renderer>().material);
@@ -123,33 +145,17 @@ public class LevelSwitch : MonoBehaviour
     {
         m_inRealSpace = !m_inRealSpace;
 
-        List<GameObject> _inList;
-        List<GameObject> _outList;
-
         if(m_inRealSpace){
-            _inList = m_staticRealspaceObjects;
-            _outList = m_staticOtherspaceObjects;
+            ChangeVisibility(1, false);
+            ChangeVisibility(0, true);
             RenderSettings.skybox = m_realspaceSkybox;
             RenderSettings.ambientSkyColor = m_realspaceShadowColor;
         } else
         {
-            _outList = m_staticRealspaceObjects; 
-            _inList= m_staticOtherspaceObjects;
+            ChangeVisibility(0, false);
+            ChangeVisibility(1, true);
             RenderSettings.skybox = m_otherspaceSkybox;
             RenderSettings.ambientSkyColor = m_otherspaceShadowColor;
-        }
-
-        foreach (GameObject obj in _inList) {
-            if(obj.GetComponent<Collider>()) obj.GetComponent<Collider>().isTrigger = false;
-            if (obj.GetComponent<Light>()) obj.GetComponent<Light>().enabled = true;
-            obj.layer = 6;
-        }
-
-        foreach (GameObject obj in _outList)
-        {
-            if (obj.GetComponent<Collider>()) obj.GetComponent<Collider>().isTrigger = true;
-            if (obj.GetComponent<Light>()) obj.GetComponent<Light>().enabled = false;
-            obj.layer = 7;
         }
     }
 }

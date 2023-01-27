@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class TalismanAttack : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject m_talismanSpawn;
+    public GameObject m_talisman;
+
+    public void Attack()
     {
-        
+        GameObject tlsm = Instantiate(m_talisman, m_talismanSpawn.transform.position, m_talismanSpawn.transform.rotation);
+        tlsm.GetComponent<Projectile>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Attack();
+        }
     }
 }

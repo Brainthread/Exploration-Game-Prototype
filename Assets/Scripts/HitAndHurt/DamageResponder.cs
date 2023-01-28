@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HurtResponder : MonoBehaviour, IHurtResponder
+public class DamageResponder : MonoBehaviour, IHurtResponder
 {
     [SerializeField] private List<Hurtbox> m_hurtboxes = new List<Hurtbox>();
     private void Start()

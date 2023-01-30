@@ -4,7 +4,8 @@ using UnityEngine;
 
 public interface PlayerAbility
 {
-    public abstract void Initialize();
+    public PlayerAbilityHandler Handler { get; }
+    public abstract void Initialize(PlayerAbilityHandler handler);
     public abstract void Enter();
     public abstract void Exit();
     public abstract void Activate();
@@ -13,4 +14,7 @@ public interface PlayerAbility
 
     public virtual void ActiveFixedUpdate() { }
     public virtual void PassiveFixedUpdate() { }
+
+    public abstract void TriggerStart();
+    public abstract void TriggerStop();
 }

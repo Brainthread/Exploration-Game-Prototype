@@ -193,5 +193,13 @@ namespace CapsuleController
             bool rayHitGround = Physics.Raycast(rayToGround, out rayHit, m_rayToGroundLength, m_whatIsGround);
             return (rayHitGround, rayHit);
         }
+
+        public void AddForce(Vector3 force)
+        {
+            if(force.y>0)
+                m_currentState = m_states.Aerial();
+            m_rigidbody.AddForce(force);
+              
+        }
     }
 }

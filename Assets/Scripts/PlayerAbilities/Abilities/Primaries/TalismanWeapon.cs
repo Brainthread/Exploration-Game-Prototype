@@ -7,7 +7,9 @@ public class TalismanWeapon : MonoBehaviour, PlayerAbility
     [SerializeField] private Vector3 m_projectileSpawnPos;
     [SerializeField] private GameObject m_projectile;
 
-    public void Initialize()
+    public PlayerAbilityHandler Handler => throw new System.NotImplementedException();
+
+    public void Initialize(PlayerAbilityHandler handler)
     {
         throw new System.NotImplementedException();
     }
@@ -34,6 +36,16 @@ public class TalismanWeapon : MonoBehaviour, PlayerAbility
 
 
     public void PassiveUpdate()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void TriggerStart()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void TriggerStop()
     {
         throw new System.NotImplementedException();
     }

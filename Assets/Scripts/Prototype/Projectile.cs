@@ -18,6 +18,7 @@ public abstract class Projectile : MonoBehaviour
     public virtual void Initialize()
     {
         m_rigidbody = GetComponent<Rigidbody>();
+        print(m_rigidbody);
         m_formerPosition = transform.position;
         m_rigidbody.velocity = transform.forward * m_speed;
         m_timeSinceCreation = 0;
@@ -25,11 +26,13 @@ public abstract class Projectile : MonoBehaviour
 
     public virtual void Start()
     {
-        Initialize();
+        //Initialize();
     }
 
     public virtual void Update()
     {
+        Quaternion lookRotation = Quaternion.LookRotation(m_rigidbody.velocity.normalized);
+        transform.rotation = lookRotation;
         m_timeSinceCreation += Time.deltaTime;
         (bool hasCollided, RaycastHit hit) = HasCollided();
         if (hasCollided)

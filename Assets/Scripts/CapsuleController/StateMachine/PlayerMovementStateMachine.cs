@@ -123,9 +123,9 @@ namespace CapsuleController
 
         void Update()
         {
-            if (m_timeSinceJumpPressed < m_coyoteTime)
+            if (m_timeSinceJumpPressed <= m_coyoteTime + 1)
                 m_timeSinceJumpPressed += Time.deltaTime;
-            if (m_timeSinceJump < m_coyoteTime)
+            if (m_timeSinceJump <= m_coyoteTime + 1)
                 m_timeSinceJump += Time.deltaTime;
 
             m_moveInput = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
@@ -194,12 +194,9 @@ namespace CapsuleController
             return (rayHitGround, rayHit);
         }
 
-        public void AddForce(Vector3 force)
+        public void DisableLevitation()
         {
-            if(force.y>0)
                 m_currentState = m_states.Aerial();
-            m_rigidbody.AddForce(force);
-              
         }
     }
 }

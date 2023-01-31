@@ -19,11 +19,16 @@ namespace CapsuleController
             m_entryHeight = _context.transform.position.y;
         }
         public override void UpdateState() {
-            if (_context.TimeSinceJumpPressed < _context.JumpBuffer && _context.AirJumpCounter > 0)
+            if(_context.TimeSinceJumpPressed < _context.CoyoteTime)
+            {
+                SwitchState(_factory.Jump());
+            }
+            else if (_context.TimeSinceJumpPressed < _context.JumpBuffer && _context.AirJumpCounter > 0)
             {
                 _context.AirJumpCounter--;
                 SwitchState(_factory.Jump());
             }
+
  
         }
         public override void ExitState() { 

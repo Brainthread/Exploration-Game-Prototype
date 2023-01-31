@@ -16,7 +16,8 @@ GameObject:
   - component: {fileID: 3328068676445992129}
   - component: {fileID: -1943151007637754084}
   - component: {fileID: -194223408749766942}
-  m_Layer: 0
+  - component: {fileID: 4809548582534213748}
+  m_Layer: 7
   m_Name: Void
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,7 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_speed: 20
-  m_hitEffect: {fileID: 0}
+  m_hitEffect: {fileID: 3993708690678755565, guid: fdcdb77a6b61dd740908ac21d119eb17, type: 3}
   m_hittableLayers:
     serializedVersion: 2
     m_Bits: 65
@@ -159,3 +160,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e6637431a103a4cba54a077e91b894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4809548582534213748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3328068676445992128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85f14012fce2a0642b912468e25a4f5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_rigidbody: {fileID: 7005666927698024133}

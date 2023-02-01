@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Talisman : Projectile, IHitDetector, IHitResponder
+public class VoidProjectile : Projectile, IHitDetector, IHitResponder, IHurtDetector, IHurtResponder
 {
-    public IHitResponder HitResponder { get { return this; } set { value = this; }}
+    public IHitResponder HitResponder { get { return this; } set { value = this; } }
+
+    public IHurtResponder HurtResponder { get { return this; } set { value = this; } }
 
     public bool CheckHit(HitData data)
     {
@@ -26,15 +28,20 @@ public class Talisman : Projectile, IHitDetector, IHitResponder
         base.OnHit(hit);
     }
 
-    public void HitHurtable (IHurtDetector hurtDetector)
+    public void HitHurtable(IHurtDetector hurtDetector)
     {
         HitData hitRegistration = new HitData();
         hitRegistration.Hurtdetector = hurtDetector;
         hitRegistration.HitDetector = this;
-        if(hitRegistration.Validate())
+        if (hitRegistration.Validate())
         {
             hurtDetector.HurtResponder.HurtResponse(hitRegistration, m_damageData);
             this.HitResponse(hitRegistration, m_damageData);
         }
+    }
+
+    public void HurtResponse(HitData data, DamageData damagedata)
+    {
+        Destroy(gameObject);
     }
 }

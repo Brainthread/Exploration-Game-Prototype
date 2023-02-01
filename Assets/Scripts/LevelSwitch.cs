@@ -31,7 +31,6 @@ public class LevelSwitch : MonoBehaviour
 
     void ChangeVisibility(int group, bool visible)
     {
-        print("Suffer");
         List<GameObject> list = m_staticRealspaceObjects;
         if(group != 0)
         {

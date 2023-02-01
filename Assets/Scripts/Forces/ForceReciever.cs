@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class ForceReciever : MonoBehaviour
 {
     [SerializeField] protected Rigidbody m_rigidbody;
+    public Rigidbody Rigidbody { get { return m_rigidbody; } }
 
     public virtual void RegisterRigidbody ()
     {

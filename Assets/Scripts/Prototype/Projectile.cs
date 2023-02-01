@@ -63,15 +63,17 @@ public abstract class Projectile : MonoBehaviour
 
     public virtual void OnHit(RaycastHit hit)
     {
-        if(m_hitEffect != null)
-        {
-            Instantiate(m_hitEffect, hit.point, Quaternion.identity);
-        }
         Destroy(gameObject); 
     }
 
     public virtual void DestroyProjectile()
     {
         Destroy(gameObject);
+    }
+
+    public virtual void OnDestroy()
+    {
+        if(m_hitEffect!=null)
+            Instantiate(m_hitEffect, transform.position, Quaternion.identity);
     }
 }

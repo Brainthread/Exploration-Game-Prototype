@@ -9,7 +9,7 @@ public abstract class PlayerAbility_ProjectileAbility : MonoBehaviour, PlayerAbi
     [SerializeField] protected GameObject m_projectile;
     protected PlayerAbilityHandler m_handler;
     public PlayerAbilityHandler Handler { get { return m_handler; }}
-
+    protected GameObject m_projectileBuf;
     public virtual void Initialize(PlayerAbilityHandler handler) { 
         m_handler = handler;
         print(handler);
@@ -30,10 +30,10 @@ public abstract class PlayerAbility_ProjectileAbility : MonoBehaviour, PlayerAbi
         Vector3 spawnPosition = transform.position + transform.right * m_projectileSpawn.x +
                                                         transform.up * m_projectileSpawn.y +
                                                         transform.forward * m_projectileSpawn.z;
-        GameObject projectile = Instantiate(m_projectile, spawnPosition, m_handler.Camera.transform.rotation);
-        projectile.GetComponent<Projectile>().Initialize();
+        m_projectileBuf = Instantiate(m_projectile, spawnPosition, m_handler.Camera.transform.rotation);
+        m_projectileBuf.GetComponent<Projectile>().Initialize();
         Vector3 hostSpeed = m_handler.GetCurrentSpeed();
-        projectile.GetComponent<Projectile>().AddSpeed(hostSpeed);
+        m_projectileBuf.GetComponent<Projectile>().AddSpeed(hostSpeed);
     }
 
     public virtual void ActiveUpdate() {

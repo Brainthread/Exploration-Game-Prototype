@@ -102,7 +102,7 @@ MonoBehaviour:
   m_hitEffect: {fileID: 0}
   m_hittableLayers:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 193
   m_lifetime: 10
 --- !u!54 &7005666927698024133
 Rigidbody:

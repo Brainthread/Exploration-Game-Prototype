@@ -44,7 +44,7 @@ public interface IHitDetector
 
 public interface IHitResponder
 {
-    public void Response(HitData hitdata, DamageData damagedata);
+    public void HitResponse(HitData hitdata, DamageData damagedata);
     public bool CheckHit(HitData hitdata);
 }
 
@@ -55,6 +55,6 @@ public interface IHurtDetector
 
 public interface IHurtResponder
 {
-    public void Response(HitData data, DamageData damagedata);
+    public void HurtResponse(HitData data, DamageData damagedata);
     public bool CheckHit(HitData data);
 }

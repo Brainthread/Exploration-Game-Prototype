@@ -16,7 +16,7 @@ public class DamageResponder : MonoBehaviour, IHurtResponder
         return true;
     }
 
-    public void Response(HitData data, DamageData damagedata)
+    public void HurtResponse(HitData data, DamageData damagedata)
     {
         print("OW OW OW");
     }

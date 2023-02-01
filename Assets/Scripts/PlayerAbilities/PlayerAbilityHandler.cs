@@ -19,6 +19,7 @@ public class PlayerAbilityHandler : MonoBehaviour
     [SerializeField] private GameObject m_projectileAttack;
     [SerializeField] private GameObject[] m_spells;
     [SerializeField] private GameObject m_banish;
+    [SerializeField] private VoidEffect Void;
 
     public Rigidbody m_rigidbody;
 
@@ -58,6 +59,7 @@ public class PlayerAbilityHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Void = VoidEffect.Current;
         if (m_primary != null)
         {
             if (Input.GetButtonDown("Fire1"))

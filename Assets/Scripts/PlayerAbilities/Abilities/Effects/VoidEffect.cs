@@ -10,6 +10,7 @@ public class VoidEffect : MonoBehaviour
     [SerializeField] private float m_maxForce = 450f;
     [SerializeField] private float m_targetSpeed = 25f;
     [SerializeField] private float m_range = 10;
+    [SerializeField] private int m_directions = 1;
 
     private float m_timeSinceSpawn = 0;
     private List<ForceReciever> m_registeredForceRecievers = new List<ForceReciever>(10);
@@ -65,13 +66,27 @@ public class VoidEffect : MonoBehaviour
     {
         Vector3 currentVelocity = current.Rigidbody.velocity;
         Vector3 offset = transform.position - current.Rigidbody.position;
-        Vector3 targetVelocity = offset.normalized * m_targetSpeed;
+
+        
+        float yComponent = Vector3.Dot(transform.up, offset.normalized);
+        float yZoneSize = (180 / m_directions);
+        float yAngle = Mathf.Acos(yComponent) * Mathf.Rad2Deg;
+        float yRound = Mathf.RoundToInt(yAngle / yZoneSize);
+
+        yAngle = yRound * yZoneSize + yZoneSize*0.5f;
+        yComponent = Mathf.Cos(yAngle * Mathf.Deg2Rad);
+        offset.y = yComponent;
+        
+
+        Vector3 targetVelocity = (offset.normalized) * m_targetSpeed;
         Vector3 velocityRelTarget = Vector3.Project(currentVelocity, targetVelocity);
         targetVelocity = targetVelocity - velocityRelTarget;
         Vector3 neededAcceleration = targetVelocity / Time.fixedDeltaTime;
         Vector3 force = Mathf.Clamp(neededAcceleration.magnitude, 0, m_maxForce)*neededAcceleration.normalized;
 
         current.ApplyForce(force*Time.fixedDeltaTime, ForceMode.VelocityChange);
+
+        Debug.DrawRay(current.transform.position, force, Color.yellow);
     }
 
     void ApplyForce(ForceReciever current)

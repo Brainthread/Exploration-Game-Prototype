@@ -129,10 +129,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d89f9a896ba94be41904f85528285af6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_lifeTime: 3
-  m_maxForce: 50
+  m_lifeTime: 333
+  m_maxForce: 100
   m_targetSpeed: 100
   m_range: 8
+  m_directions: 6
 --- !u!1 &7163423123586257066
 GameObject:
   m_ObjectHideFlags: 0

@@ -133,7 +133,7 @@ MonoBehaviour:
   m_maxForce: 100
   m_targetSpeed: 100
   m_range: 8
-  m_directions: 6
+  m_directions: 2
 --- !u!1 &7163423123586257066
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ public class VoidEffect : MonoBehaviour
     [SerializeField] private float m_targetSpeed = 25f;
     [SerializeField] private float m_range = 10;
     [SerializeField] private int m_directions = 1;
+    [SerializeField] private float m_verticalMaxSpeed = 20;
 
     private float m_timeSinceSpawn = 0;
     private List<ForceReciever> m_registeredForceRecievers = new List<ForceReciever>(10);
@@ -70,15 +71,18 @@ public class VoidEffect : MonoBehaviour
         
         float yComponent = Vector3.Dot(transform.up, offset.normalized);
         float yZoneSize = (180 / m_directions);
-        float yAngle = Mathf.Acos(yComponent) * Mathf.Rad2Deg;
-        float yRound = Mathf.RoundToInt(yAngle / yZoneSize);
+        float yAngle = Mathf.Acos(yComponent) * Mathf.Rad2Deg - yZoneSize/2;
+        float yRound = Mathf.Round((yAngle) / yZoneSize);
 
         yAngle = yRound * yZoneSize + yZoneSize*0.5f;
+        print(yRound * yZoneSize);
         yComponent = Mathf.Cos(yAngle * Mathf.Deg2Rad);
         offset.y = yComponent;
-        
+
+        Debug.DrawRay(current.transform.position, transform.up * offset.y*100, Color.yellow);
 
         Vector3 targetVelocity = (offset.normalized) * m_targetSpeed;
+        targetVelocity.y = Mathf.Clamp(targetVelocity.y, -m_verticalMaxSpeed, m_verticalMaxSpeed);
         Vector3 velocityRelTarget = Vector3.Project(currentVelocity, targetVelocity);
         targetVelocity = targetVelocity - velocityRelTarget;
         Vector3 neededAcceleration = targetVelocity / Time.fixedDeltaTime;
@@ -86,7 +90,6 @@ public class VoidEffect : MonoBehaviour
 
         current.ApplyForce(force*Time.fixedDeltaTime, ForceMode.VelocityChange);
 
-        Debug.DrawRay(current.transform.position, force, Color.yellow);
     }
 
     void ApplyForce(ForceReciever current)

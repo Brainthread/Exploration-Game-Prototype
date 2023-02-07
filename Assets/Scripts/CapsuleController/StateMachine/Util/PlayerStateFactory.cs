@@ -9,12 +9,14 @@ namespace CapsuleController
         private PlayerGroundState m_groundState;
         private PlayerAerialState m_aerialState;
         private PlayerJumpState m_jumpState;
+        private PlayerGlideState m_glideState;
         public PlayerStateFactory(PlayerMovementStateMachine context)
         {
             m_context = context;
             m_groundState = new PlayerGroundState(m_context, this);
             m_aerialState = new PlayerAerialState(m_context, this);
             m_jumpState = new PlayerJumpState(m_context, this);
+            m_glideState = new PlayerGlideState(m_context, this);
         }
         public PlayerBaseState Grounded()
         {
@@ -27,6 +29,10 @@ namespace CapsuleController
         public PlayerBaseState Jump()
         {
             return m_jumpState;
+        }
+        public PlayerGlideState Glide()
+        {
+            return m_glideState;
         }
     }
 }

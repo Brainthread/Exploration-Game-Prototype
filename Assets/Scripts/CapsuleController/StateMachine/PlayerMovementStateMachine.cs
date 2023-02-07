@@ -127,6 +127,8 @@ namespace CapsuleController
                 m_timeSinceJumpPressed += Time.deltaTime;
             if (m_timeSinceJump <= m_coyoteTime + 1)
                 m_timeSinceJump += Time.deltaTime;
+            if(m_timeSinceUngrounded <= m_coyoteTime + 1)
+                m_timeSinceUngrounded += Time.deltaTime;
 
             m_moveInput = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
             m_isRunning = Input.GetButton("Sprint");

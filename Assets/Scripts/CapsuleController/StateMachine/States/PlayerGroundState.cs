@@ -36,6 +36,7 @@ namespace CapsuleController
             PlayerMovementStateMachine.Locomotion locomotion = _context.IsRunning ? _context.RunLocomotion : _context.WalkLocomotion;
             if (!_context.CheckIfGrounded(rayHitGround, rayHit)) SwitchState(_factory.Aerial());
             if (_context.ShouldMaintainHeight) MaintainHeight(rayHit, Vector3.down);
+            _context.TimeSinceUngrounded = 0;
             Move(rayHit, locomotion);
         }
 
@@ -91,7 +92,7 @@ namespace CapsuleController
 
         private bool ShouldJump()
         {
-            return _context.TimeSinceJumpPressed < _context.JumpBuffer && _context.TimeSinceJumpPressed < _context.CoyoteTime;
+            return _context.TimeSinceJumpPressed < _context.JumpBuffer;
         }
     }
 }

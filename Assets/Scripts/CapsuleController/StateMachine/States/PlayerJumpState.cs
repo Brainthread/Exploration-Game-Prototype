@@ -22,6 +22,7 @@ namespace CapsuleController
                 _context.PhysicsBody.AddForce(Vector3.up * _context.JumpForceFactor, ForceMode.Impulse);
                 _context.TimeSinceJumpPressed = _context.JumpBuffer;
                 _context.TimeSinceJump = 0f;
+                _context.TimeSinceUngrounded = _context.CoyoteTime;
             }
 
         }

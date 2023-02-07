@@ -82,6 +82,9 @@ public class VoidEffect : MonoBehaviour
         Debug.DrawRay(current.transform.position, transform.up * offset.y*100, Color.yellow);
 
         Vector3 targetVelocity = (offset.normalized) * m_targetSpeed;
+
+        Debug.DrawRay(current.transform.position, targetVelocity * 100, Color.red);
+
         targetVelocity.y = Mathf.Clamp(targetVelocity.y, -m_verticalMaxSpeed, m_verticalMaxSpeed);
         Vector3 velocityRelTarget = Vector3.Project(currentVelocity, targetVelocity);
         targetVelocity = targetVelocity - velocityRelTarget;

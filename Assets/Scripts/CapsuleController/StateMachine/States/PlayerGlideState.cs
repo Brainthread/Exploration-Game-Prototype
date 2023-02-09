@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 namespace CapsuleController
@@ -31,7 +32,6 @@ namespace CapsuleController
             if (_context.CheckIfGrounded(rayHitGround, rayHit))
             {
                 SwitchState(_factory.Grounded());
-                return;
             }
             if(!_context.GlideInput)
             {
@@ -43,13 +43,20 @@ namespace CapsuleController
 
         private void Glide()
         {
+
             Vector3 currentHorizontalVelocity = new Vector3(_context.PhysicsBody.velocity.x, 0, _context.PhysicsBody.velocity.z);
-            float targetSpeed = currentHorizontalVelocity.magnitude * (1-Time.fixedDeltaTime);
+            float targetSpeed = currentHorizontalVelocity.magnitude * (1-Time.fixedDeltaTime/10);
             Vector3 targetVelocity = targetSpeed * _context.transform.forward;
             Vector3 relativeVelocity = targetVelocity - currentHorizontalVelocity;
             Vector3 requiredForce = relativeVelocity / Time.fixedDeltaTime;
 
-            _context.PhysicsBody.AddForce(requiredForce*Time.fixedDeltaTime * 10f);
+            float maxForce = 10;
+            float modifier = 1;
+            if (requiredForce.magnitude > maxForce)
+                modifier = maxForce/requiredForce.magnitude;
+            requiredForce *= modifier;
+            _context.GoalVelocity = Vector3.zero;
+            _context.PhysicsBody.AddForce(requiredForce*Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
 
         private void MaintainVerticalVelocity()

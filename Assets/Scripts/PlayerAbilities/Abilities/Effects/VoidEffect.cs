@@ -75,7 +75,6 @@ public class VoidEffect : MonoBehaviour
         float yRound = Mathf.Round((yAngle) / yZoneSize);
 
         yAngle = yRound * yZoneSize + yZoneSize*0.5f;
-        print(yRound * yZoneSize);
         yComponent = Mathf.Cos(yAngle * Mathf.Deg2Rad);
         offset.y = 0;
         offset = offset.normalized;

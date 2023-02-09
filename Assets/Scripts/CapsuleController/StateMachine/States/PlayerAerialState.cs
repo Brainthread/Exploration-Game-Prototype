@@ -88,6 +88,7 @@ namespace CapsuleController
 
         private void Move(RaycastHit rayHit, PlayerMovementStateMachine.Locomotion locomotion)
         {
+            
             Vector3 m_UnitGoal = Vector3.ProjectOnPlane(_context.MoveInput, rayHit.normal).normalized;
 
             Vector3 unitVel = _context.GoalVelocity.normalized;
@@ -101,7 +102,8 @@ namespace CapsuleController
             Vector3 neededAccel = (_context.GoalVelocity - _context.PhysicsBody.velocity) / Time.fixedDeltaTime;
             float maxAccel = locomotion.maxAccelForce * _context.MaxAccelerationForceFromDot.Evaluate(velDot) * _context.MaxAccelerationForceFactor;
             neededAccel = Vector3.ClampMagnitude(neededAccel, maxAccel);
-            _context.PhysicsBody.AddForceAtPosition(Vector3.Scale(neededAccel * _context.PhysicsBody.mass, _context.MoveForceScale), _context.transform.position);
+            _context.PhysicsBody.AddForceAtPosition(Vector3.Scale(neededAccel * _context.PhysicsBody.mass, _context.MoveForceScale), _context.transform.position); 
+            
         }
     }
 }

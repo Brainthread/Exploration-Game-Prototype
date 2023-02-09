@@ -77,6 +77,8 @@ public class VoidEffect : MonoBehaviour
         yAngle = yRound * yZoneSize + yZoneSize*0.5f;
         print(yRound * yZoneSize);
         yComponent = Mathf.Cos(yAngle * Mathf.Deg2Rad);
+        offset.y = 0;
+        offset = offset.normalized;
         offset.y = yComponent;
 
         Debug.DrawRay(current.transform.position, transform.up * offset.y*100, Color.yellow);

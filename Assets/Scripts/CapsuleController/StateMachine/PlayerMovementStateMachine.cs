@@ -36,6 +36,8 @@ namespace CapsuleController
         private bool m_jumpReady = true;
         private bool m_isJumping = false;
 
+        private bool m_glideInput = false;
+
         private int m_airJumpCounter = 0;
 
         [Header("Grounded State:")]
@@ -57,6 +59,10 @@ namespace CapsuleController
         [SerializeField] private float m_coyoteTime = 0.25f;
         [SerializeField] private LayerMask m_whatIsGround;
         [SerializeField] private int m_airJumps = 2;
+
+        [Header("Glide:")]
+        [SerializeField] private float m_glideMaxFallSpeed = 3f;
+        [SerializeField] private float m_glideVelocityTransferSpeed = 10;
 
         [System.Serializable]
         public class Locomotion
@@ -81,6 +87,8 @@ namespace CapsuleController
         public bool ShouldMaintainHeight { get { return m_shouldMaintainHeight; } set { m_shouldMaintainHeight = value; } }
 
 
+
+
         public Vector3 GoalVelocity { get { return m_GoalVel; } set { m_GoalVel = value; } }
         public AnimationCurve AccelerationFactorFromDot { get { return m_accelerationFactorFromDot; } set { m_accelerationFactorFromDot = value; } }
         public AnimationCurve MaxAccelerationForceFromDot { get { return m_maxAccelerationForceFactorFromDot; } }
@@ -92,10 +100,22 @@ namespace CapsuleController
         public Locomotion AerialLocomotion { get { return aerialLocomotion; } }
 
 
+
+
+        public bool GlideInput { get { return m_glideInput; } }
+        public float GlideMaxFallSpeed { get { return m_glideMaxFallSpeed; } }
+        private float GlideTransferSpeed { get { return m_glideVelocityTransferSpeed; } }
+
+
+
+        
         public Vector3 MoveInput { get { return m_moveInput; } }
         public bool IsRunning { get { return m_isRunning; } }
 
         public float FallGravityFactor { get { return m_fallGravityFactor; } }
+
+
+
 
         public bool JumpReady { get { return m_jumpReady; } set { m_jumpReady = value; } }
         public float TimeSinceJumpPressed { get { return m_timeSinceJumpPressed; } set { m_timeSinceJumpPressed = value; } }
@@ -129,7 +149,7 @@ namespace CapsuleController
                 m_timeSinceJump += Time.deltaTime;
             if(m_timeSinceUngrounded <= m_coyoteTime + 1)
                 m_timeSinceUngrounded += Time.deltaTime;
-
+            m_glideInput = Input.GetButton("Jump");
             m_moveInput = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
             m_isRunning = Input.GetButton("Sprint");
             if (Input.GetButtonDown("Jump"))
@@ -198,7 +218,8 @@ namespace CapsuleController
 
         public void DisableLevitation()
         {
-                m_currentState = m_states.Aerial();
+                if(m_currentState == m_states.Grounded())
+                    m_currentState = m_states.Aerial();
         }
     }
 }

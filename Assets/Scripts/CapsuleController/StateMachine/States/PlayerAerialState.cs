@@ -31,6 +31,10 @@ namespace CapsuleController
                     _context.AirJumpCounter--;
                     SwitchState(_factory.Jump());
                 }
+                else
+                {
+                    SwitchState(_factory.Glide());
+                }
             }
  
         }

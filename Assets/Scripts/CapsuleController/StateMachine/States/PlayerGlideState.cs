@@ -5,7 +5,6 @@ namespace CapsuleController
 {
     public class PlayerGlideState : PlayerBaseState
     {
-        private float m_maxHorizontalVelocity = 0;
         public PlayerGlideState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory)
         {
 
@@ -19,7 +18,6 @@ namespace CapsuleController
         public override void EnterState()
         {
             
-            m_maxHorizontalVelocity = new Vector3(_context.PhysicsBody.velocity.x, 0, _context.PhysicsBody.velocity.z).magnitude;
         }
 
         public override void ExitState()
@@ -45,7 +43,13 @@ namespace CapsuleController
 
         private void Glide()
         {
-            throw new NotImplementedException();
+            Vector3 currentHorizontalVelocity = new Vector3(_context.PhysicsBody.velocity.x, 0, _context.PhysicsBody.velocity.z);
+            float targetSpeed = currentHorizontalVelocity.magnitude * (1-Time.fixedDeltaTime);
+            Vector3 targetVelocity = targetSpeed * _context.transform.forward;
+            Vector3 relativeVelocity = targetVelocity - currentHorizontalVelocity;
+            Vector3 requiredForce = relativeVelocity / Time.fixedDeltaTime;
+
+            _context.PhysicsBody.AddForce(requiredForce*Time.fixedDeltaTime * 10f);
         }
 
         private void MaintainVerticalVelocity()

@@ -9,7 +9,10 @@ namespace CapsuleController
         public override void EnterState() {
             _context.ShouldMaintainHeight = true;
             _context.JumpReady = true;
-            if (ShouldJump())
+            (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
+            bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
+            bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
+            if (ShouldJump() && grounded && onIncline)
                 SwitchState(_factory.Jump());
             _context.PhysicsBody.useGravity = false;
             Vector3 speed = _context.PhysicsBody.velocity;
@@ -74,7 +77,7 @@ namespace CapsuleController
 
             Vector3 worldPos = _context.PhysicsBody.position;
             worldPos.y = rayHit.point.y + _context.LevitateHeight;
-            worldPos = Vector3.MoveTowards(_context.PhysicsBody.position, worldPos, Time.fixedDeltaTime * 5);
+            worldPos = Vector3.MoveTowards(_context.PhysicsBody.position, worldPos, Time.fixedDeltaTime * 15f);
 
             _context.PhysicsBody.MovePosition(worldPos);
             if (hitBody != null)
@@ -86,7 +89,10 @@ namespace CapsuleController
         private void Move(RaycastHit rayHit, PlayerMovementStateMachine.Locomotion locomotion)
         {
          
-            Vector3 m_UnitGoal = Vector3.ProjectOnPlane(_context.MoveInput, rayHit.normal).normalized;
+            Vector3 m_UnitGoal = _context.MoveInput.normalized;
+            float m_projectedVerticalSpeed = Vector3.ProjectOnPlane(m_UnitGoal, rayHit.normal).y;
+            m_UnitGoal.y = m_projectedVerticalSpeed;
+            m_UnitGoal = m_UnitGoal.normalized;
             Vector3 unitVel = _context.GoalVelocity.normalized;
             float velDot = Vector3.Dot(m_UnitGoal, unitVel);
             float accel = locomotion.acceleration * _context.AccelerationFactorFromDot.Evaluate(velDot);
@@ -94,12 +100,7 @@ namespace CapsuleController
             _context.GoalVelocity = Vector3.MoveTowards(_context.GoalVelocity,
                                             goalVel,
                                             accel * Time.fixedDeltaTime);
-
-            Vector3 neededAccel = (_context.GoalVelocity - _context.PhysicsBody.velocity) / Time.fixedDeltaTime;
-            float maxAccel = locomotion.maxAccelForce * _context.MaxAccelerationForceFromDot.Evaluate(velDot) * _context.MaxAccelerationForceFactor;
-            neededAccel = Vector3.ClampMagnitude(neededAccel, maxAccel);
-            _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, _context.GoalVelocity, accel * Time.fixedDeltaTime);
-            //_context.PhysicsBody.AddForceAtPosition(Vector3.Scale(neededAccel * _context.PhysicsBody.mass, _context.MoveForceScale), _context.transform.position);
+            _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, goalVel, accel * Time.fixedDeltaTime);
         }
 
         private bool ShouldJump()

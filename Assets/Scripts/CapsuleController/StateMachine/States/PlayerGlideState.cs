@@ -29,9 +29,11 @@ namespace CapsuleController
         public override void FixedUpdateState()
         {
             (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
+            bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
+            bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
             if (_context.CheckIfGrounded(rayHitGround, rayHit))
             {
-                SwitchState(_factory.Grounded());
+                if(grounded&&onIncline) SwitchState(_factory.Grounded());
             }
             if(!_context.GlideInput)
             {
@@ -50,13 +52,16 @@ namespace CapsuleController
             Vector3 relativeVelocity = targetVelocity - currentHorizontalVelocity;
             Vector3 requiredForce = relativeVelocity / Time.fixedDeltaTime;
 
+            targetVelocity.y += _context.PhysicsBody.velocity.y;
+
             float maxForce = 30;
             float modifier = 1;
             if (requiredForce.magnitude > maxForce)
                 modifier = maxForce/requiredForce.magnitude;
             requiredForce *= modifier;
             _context.GoalVelocity = Vector3.zero;
-            _context.PhysicsBody.AddForce(requiredForce*Time.fixedDeltaTime, ForceMode.VelocityChange);
+            _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, targetVelocity, Time.fixedDeltaTime * 5);
+            //_context.PhysicsBody.AddForce(requiredForce*Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
 
         private void MaintainVerticalVelocity()

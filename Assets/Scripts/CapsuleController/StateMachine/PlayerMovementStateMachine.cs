@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting.FullSerializer;
 using UnityEditorInternal;
 using UnityEngine;
@@ -10,13 +11,17 @@ namespace CapsuleController
     {
         [Header("Common variables")]
         [SerializeField] private bool m_allowControl = true;
+
+
         private Rigidbody m_rigidbody;
         private Vector3 m_gravitationalForce;
         private Vector3 m_rayDir = Vector3.down;
+        
 
         private bool m_shouldMaintainHeight = true;
 
         [Header("Levitation Control:")]
+        [SerializeField] private float m_groundedHeight = 2;
         [SerializeField] private float m_levitateHeight = 1.75f;
         [SerializeField] private float m_rayToGroundLength = 3f;
         [SerializeField] public float m_rideSpringStrength = 50f;
@@ -44,6 +49,8 @@ namespace CapsuleController
         [SerializeField] private AnimationCurve m_accelerationFactorFromDot;
         [SerializeField] private AnimationCurve m_maxAccelerationForceFactorFromDot;
         [SerializeField] private Vector3 m_moveForceScale = new Vector3(1f, 0f, 1f);
+        [SerializeField] private float maximumIncline = 45;
+
 
         [SerializeField] private Locomotion walkLocomotion;
         [SerializeField] private Locomotion runLocomotion;
@@ -135,7 +142,7 @@ namespace CapsuleController
             m_rigidbody = GetComponent<Rigidbody>();
             m_gravitationalForce = Physics.gravity * m_rigidbody.mass;
             m_states = new PlayerStateFactory(this);
-            m_currentState = m_states.Grounded();
+            m_currentState = m_states.Aerial();
             m_currentState.EnterState();
             m_timeSinceJumpPressed = Mathf.Max(m_coyoteTime, m_jumpBuffer);
             m_timeSinceJump = Mathf.Max(m_coyoteTime, m_jumpBuffer);
@@ -196,10 +203,10 @@ namespace CapsuleController
          */
         public bool CheckIfGrounded(bool rayHitGround, RaycastHit rayHit)
         {
-            bool grounded;
+            bool grounded = false;
             if (rayHitGround == true)
             {
-                grounded = rayHit.distance <= m_levitateHeight * 1.3f; // 1.3f allows for greater leniancy (as the value will oscillate about the rideHeight).
+                grounded = rayHit.distance <= m_groundedHeight; 
             }
             else
             {
@@ -220,6 +227,16 @@ namespace CapsuleController
         {
                 if(m_currentState == m_states.Grounded())
                     m_currentState = m_states.Aerial();
+        }
+
+        public bool LegalIncline(bool hitGround, RaycastHit hit)
+        {
+            if (!hitGround) return false;
+            float dot = Vector3.Dot(Vector3.up, hit.normal);
+            float angle = Mathf.Rad2Deg * Mathf.Acos(dot);
+            print(angle);
+            Debug.DrawRay(hit.point, hit.normal * 10, Color.red);
+            return angle < maximumIncline;
         }
     }
 }

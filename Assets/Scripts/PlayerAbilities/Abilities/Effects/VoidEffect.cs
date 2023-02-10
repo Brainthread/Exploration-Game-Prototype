@@ -21,7 +21,6 @@ public class VoidEffect : MonoBehaviour
     void Start()
     {
         Current = this;
-        print(this);
     }
 
     // Update is called once per frame

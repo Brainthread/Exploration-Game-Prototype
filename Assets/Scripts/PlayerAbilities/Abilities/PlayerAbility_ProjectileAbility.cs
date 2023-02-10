@@ -12,8 +12,6 @@ public abstract class PlayerAbility_ProjectileAbility : MonoBehaviour, PlayerAbi
     protected GameObject m_projectileBuf;
     public virtual void Initialize(PlayerAbilityHandler handler) { 
         m_handler = handler;
-        print(handler);
-        print(m_handler);
     }
 
     public virtual void Enter() {

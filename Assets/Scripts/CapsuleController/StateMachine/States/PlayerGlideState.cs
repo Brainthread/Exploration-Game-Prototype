@@ -45,12 +45,12 @@ namespace CapsuleController
         {
 
             Vector3 currentHorizontalVelocity = new Vector3(_context.PhysicsBody.velocity.x, 0, _context.PhysicsBody.velocity.z);
-            float targetSpeed = currentHorizontalVelocity.magnitude * (1-Time.fixedDeltaTime/10);
+            float targetSpeed = Mathf.Clamp(currentHorizontalVelocity.magnitude * (1-Time.fixedDeltaTime/10), 5f, currentHorizontalVelocity.magnitude);
             Vector3 targetVelocity = targetSpeed * _context.transform.forward;
             Vector3 relativeVelocity = targetVelocity - currentHorizontalVelocity;
             Vector3 requiredForce = relativeVelocity / Time.fixedDeltaTime;
 
-            float maxForce = 10;
+            float maxForce = 30;
             float modifier = 1;
             if (requiredForce.magnitude > maxForce)
                 modifier = maxForce/requiredForce.magnitude;

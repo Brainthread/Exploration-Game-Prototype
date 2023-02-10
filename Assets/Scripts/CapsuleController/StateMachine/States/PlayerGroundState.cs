@@ -11,6 +11,10 @@ namespace CapsuleController
             _context.JumpReady = true;
             if (ShouldJump())
                 SwitchState(_factory.Jump());
+            _context.PhysicsBody.useGravity = false;
+            Vector3 speed = _context.PhysicsBody.velocity;
+            speed.y = 0;
+            _context.PhysicsBody.velocity = speed;
         }
 
         public override void UpdateState() {
@@ -21,6 +25,7 @@ namespace CapsuleController
 
         public override void ExitState() {
             _context.ShouldMaintainHeight = false;
+            _context.PhysicsBody.useGravity = true;
         }
 
         public override void CheckSwitchStates() { 
@@ -34,10 +39,10 @@ namespace CapsuleController
         public override void FixedUpdateState(){
             (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
             PlayerMovementStateMachine.Locomotion locomotion = _context.IsRunning ? _context.RunLocomotion : _context.WalkLocomotion;
-            if (!_context.CheckIfGrounded(rayHitGround, rayHit)) SwitchState(_factory.Aerial());
+            if (!_context.CheckIfGrounded(rayHitGround, rayHit)|| !_context.LegalIncline(rayHitGround, rayHit)) SwitchState(_factory.Aerial());
+            Move(rayHit, locomotion);
             if (_context.ShouldMaintainHeight) MaintainHeight(rayHit, Vector3.down);
             _context.TimeSinceUngrounded = 0;
-            Move(rayHit, locomotion);
         }
 
         public void MaintainRotation()
@@ -65,8 +70,13 @@ namespace CapsuleController
             float currHeight = rayHit.distance - _context.LevitateHeight;
             float springForce = (currHeight * _context.LevitateStrength) - (relVel * _context.LevitateDamper);
             Vector3 maintainHeightForce = -_context.GravitationalForce + springForce * Vector3.down;
-            _context.PhysicsBody.AddForce(maintainHeightForce);
+            //_context.PhysicsBody.AddForce(maintainHeightForce);
 
+            Vector3 worldPos = _context.PhysicsBody.position;
+            worldPos.y = rayHit.point.y + _context.LevitateHeight;
+            worldPos = Vector3.MoveTowards(_context.PhysicsBody.position, worldPos, Time.fixedDeltaTime * 5);
+
+            _context.PhysicsBody.MovePosition(worldPos);
             if (hitBody != null)
             {
                 hitBody.AddForceAtPosition(-maintainHeightForce, rayHit.point);
@@ -88,7 +98,8 @@ namespace CapsuleController
             Vector3 neededAccel = (_context.GoalVelocity - _context.PhysicsBody.velocity) / Time.fixedDeltaTime;
             float maxAccel = locomotion.maxAccelForce * _context.MaxAccelerationForceFromDot.Evaluate(velDot) * _context.MaxAccelerationForceFactor;
             neededAccel = Vector3.ClampMagnitude(neededAccel, maxAccel);
-            _context.PhysicsBody.AddForceAtPosition(Vector3.Scale(neededAccel * _context.PhysicsBody.mass, _context.MoveForceScale), _context.transform.position);
+            _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, _context.GoalVelocity, accel * Time.fixedDeltaTime);
+            //_context.PhysicsBody.AddForceAtPosition(Vector3.Scale(neededAccel * _context.PhysicsBody.mass, _context.MoveForceScale), _context.transform.position);
         }
 
         private bool ShouldJump()

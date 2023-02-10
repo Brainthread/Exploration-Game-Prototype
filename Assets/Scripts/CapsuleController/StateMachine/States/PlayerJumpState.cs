@@ -14,12 +14,10 @@ namespace CapsuleController
                 _context.JumpReady = false;
                 _context.ShouldMaintainHeight = false;
                 _context.IsJumping = true;
-                _context.PhysicsBody.velocity = new Vector3(_context.PhysicsBody.velocity.x, 0f, _context.PhysicsBody.velocity.z);
-                if (rayHit.distance != 0)
-                {
-                    _context.PhysicsBody.position = new Vector3(_context.PhysicsBody.position.x, _context.PhysicsBody.position.y - (rayHit.distance - _context.LevitateHeight), _context.PhysicsBody.position.z);
-                }
+
+                if(_context.PhysicsBody.velocity.y<0) _context.PhysicsBody.velocity = new Vector3(_context.PhysicsBody.velocity.x, 0f, _context.PhysicsBody.velocity.z);
                 _context.PhysicsBody.AddForce(Vector3.up * _context.JumpForceFactor, ForceMode.Impulse);
+
                 _context.TimeSinceJumpPressed = _context.JumpBuffer;
                 _context.TimeSinceJump = 0f;
                 _context.TimeSinceUngrounded = _context.CoyoteTime;

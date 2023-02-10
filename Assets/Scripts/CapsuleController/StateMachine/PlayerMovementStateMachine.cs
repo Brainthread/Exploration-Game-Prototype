@@ -113,7 +113,7 @@ namespace CapsuleController
 
         public bool GlideInput { get { return m_glideInput; } }
         public float GlideMaxFallSpeed { get { return m_glideMaxFallSpeed; } }
-        private float GlideTransferSpeed { get { return m_glideVelocityTransferSpeed; } }
+        public float GlideTransferSpeed { get { return m_glideVelocityTransferSpeed; } }
 
 
 
@@ -166,7 +166,7 @@ namespace CapsuleController
                 m_timeSinceJumpPressed = 0;
                 m_jumpInput = new Vector3(0, 1, 0);
             }
-
+            print(m_currentState);
             m_currentState.UpdateState();
         }
 

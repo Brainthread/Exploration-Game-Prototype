@@ -15,9 +15,6 @@ namespace CapsuleController
             if (ShouldJump() && grounded && onIncline)
                 SwitchState(_factory.Jump());
             _context.PhysicsBody.useGravity = false;
-            Vector3 speed = _context.PhysicsBody.velocity;
-            speed.y = 0;
-            _context.PhysicsBody.velocity = speed;
         }
 
         public override void UpdateState() {
@@ -77,7 +74,7 @@ namespace CapsuleController
 
             Vector3 worldPos = _context.PhysicsBody.position;
             worldPos.y = rayHit.point.y + _context.LevitateHeight;
-            worldPos = Vector3.MoveTowards(_context.PhysicsBody.position, worldPos, Time.fixedDeltaTime * 15f);
+            worldPos = Vector3.MoveTowards(_context.PhysicsBody.position, worldPos, Time.fixedDeltaTime * 1000);
 
             _context.PhysicsBody.MovePosition(worldPos);
             if (hitBody != null)
@@ -88,7 +85,6 @@ namespace CapsuleController
 
         private void Move(RaycastHit rayHit, PlayerMovementStateMachine.Locomotion locomotion)
         {
-         
             Vector3 m_UnitGoal = _context.MoveInput.normalized;
             float m_projectedVerticalSpeed = Vector3.ProjectOnPlane(m_UnitGoal, rayHit.normal).y;
             m_UnitGoal.y = m_projectedVerticalSpeed;

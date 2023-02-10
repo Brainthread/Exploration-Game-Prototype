@@ -60,7 +60,7 @@ namespace CapsuleController
                 modifier = maxForce/requiredForce.magnitude;
             requiredForce *= modifier;
             _context.GoalVelocity = Vector3.zero;
-            _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, targetVelocity, Time.fixedDeltaTime * 5);
+            _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, targetVelocity, Time.fixedDeltaTime*_context.GlideTransferSpeed);
             //_context.PhysicsBody.AddForce(requiredForce*Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
 

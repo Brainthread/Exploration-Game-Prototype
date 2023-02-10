@@ -15,8 +15,14 @@ namespace CapsuleController
                 _context.ShouldMaintainHeight = false;
                 _context.IsJumping = true;
 
-                if(_context.PhysicsBody.velocity.y<0) _context.PhysicsBody.velocity = new Vector3(_context.PhysicsBody.velocity.x, 0f, _context.PhysicsBody.velocity.z);
-                _context.PhysicsBody.AddForce(Vector3.up * _context.JumpForceFactor, ForceMode.Impulse);
+                if(_context.PhysicsBody.velocity.y < 0f) 
+                    _context.PhysicsBody.velocity = new Vector3(_context.PhysicsBody.velocity.x, 0f, _context.PhysicsBody.velocity.z);
+
+                Vector3 jumpVector = _context.PhysicsBody.velocity;
+                jumpVector += Vector3.up * _context.JumpForceFactor;
+                _context.PhysicsBody.velocity = jumpVector;
+                Debug.Log("JUMP!");
+                Debug.Log(jumpVector);
 
                 _context.TimeSinceJumpPressed = _context.JumpBuffer;
                 _context.TimeSinceJump = 0f;

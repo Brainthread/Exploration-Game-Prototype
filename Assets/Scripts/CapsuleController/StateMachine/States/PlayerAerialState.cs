@@ -18,9 +18,13 @@ namespace CapsuleController
             m_entryVelocity.y = 0;
             m_entryHeight = _context.transform.position.y;
             _context.PhysicsBody.useGravity = true;
+
         }
         public override void UpdateState() {
-            if (_context.TimeSinceJumpPressed < _context.JumpBuffer)
+            (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
+            bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
+            bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
+            if (_context.TimeSinceJumpPressed < _context.JumpBuffer && !(grounded))
             {
                 if (_context.TimeSinceUngrounded < _context.CoyoteTime)
                 {
@@ -56,6 +60,8 @@ namespace CapsuleController
         public override void FixedUpdateState(){
             _context.PhysicsBody.useGravity = true;
             (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
+            bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
+            bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
             if (_context.PhysicsBody.velocity.y < 0)
             {
                 HandleFall();
@@ -67,10 +73,17 @@ namespace CapsuleController
 
             if (_context.PhysicsBody.velocity.y < 0 || _context.transform.position.y >= m_entryHeight + _context.LevitateHeight)
             {
-                if (_context.CheckIfGrounded(rayHitGround, rayHit)&&_context.LegalIncline(rayHitGround, rayHit))
+                if (grounded&&onIncline)
                 {
                     SwitchState(_factory.Grounded());
                     return;
+                }
+                if(grounded&&!onIncline)
+                {
+                    if(_context.PhysicsBody.velocity.y > 0)
+                    {
+                        HandleFall();
+                    }
                 }
             }
 

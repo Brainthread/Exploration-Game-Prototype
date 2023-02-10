@@ -14,6 +14,8 @@ namespace CapsuleController
 
 
         private Rigidbody m_rigidbody;
+        private Collider m_groundedCollider;
+        private Collider m_aerialCollider;
         private Vector3 m_gravitationalForce;
         private Vector3 m_rayDir = Vector3.down;
         
@@ -234,8 +236,6 @@ namespace CapsuleController
             if (!hitGround) return false;
             float dot = Vector3.Dot(Vector3.up, hit.normal);
             float angle = Mathf.Rad2Deg * Mathf.Acos(dot);
-            print(angle);
-            Debug.DrawRay(hit.point, hit.normal * 10, Color.red);
             return angle < maximumIncline;
         }
     }

@@ -71,7 +71,7 @@ namespace CapsuleController
                 HandleAscent();
             }
 
-            if (_context.PhysicsBody.velocity.y <= 0 || _context.transform.position.y >= m_entryHeight + _context.LevitateHeight)
+            if (_context.PhysicsBody.velocity.y <= 1 || _context.transform.position.y >= m_entryHeight + _context.LevitateHeight)
             {
                 if (grounded&&onIncline)
                 {

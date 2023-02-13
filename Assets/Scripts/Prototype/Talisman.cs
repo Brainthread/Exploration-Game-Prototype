@@ -13,7 +13,7 @@ public class Talisman : Projectile, IHitDetector, IHitResponder
 
     public void HitResponse(HitData hitData, DamageData damageData)
     {
-        print("You hit something!! Go you!");
+
     }
 
     public override void OnHit(RaycastHit hit)

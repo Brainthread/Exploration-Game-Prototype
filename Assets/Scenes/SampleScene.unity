@@ -3379,7 +3379,7 @@ MonoBehaviour:
     m_Bits: 65
   m_airJumps: 0
   m_glideMaxFallSpeed: 7
-  m_glideVelocityTransferSpeed: 30
+  m_glideVelocityTransferSpeed: 3
 --- !u!114 &1879394344
 MonoBehaviour:
   m_ObjectHideFlags: 0

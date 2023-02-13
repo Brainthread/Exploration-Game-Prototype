@@ -10,12 +10,12 @@ namespace CapsuleController
         public PlayerAerialState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
       
         public override void EnterState() {
+            Debug.Log("Aerial");
             if (_context.AirJumpCounter > 0)
             {
                 _context.JumpReady = true;
             }
             m_entryVelocity = _context.PhysicsBody.velocity;
-            m_entryVelocity.y = 0;
             m_entryHeight = _context.transform.position.y;
             _context.PhysicsBody.useGravity = true;
 
@@ -71,7 +71,7 @@ namespace CapsuleController
                 HandleAscent();
             }
 
-            if (_context.PhysicsBody.velocity.y <= 1 || _context.transform.position.y >= m_entryHeight + _context.LevitateHeight)
+            if (_context.TimeSinceJump>0.2f)
             {
                 if (grounded&&onIncline)
                 {
@@ -109,8 +109,7 @@ namespace CapsuleController
         private void Move(RaycastHit rayHit, PlayerMovementStateMachine.Locomotion locomotion)
         {
             
-            Vector3 m_UnitGoal = Vector3.ProjectOnPlane(_context.MoveInput, rayHit.normal).normalized;
-
+            Vector3 m_UnitGoal = _context.MoveInput.normalized;
             Vector3 unitVel = _context.GoalVelocity.normalized;
             float velDot = Vector3.Dot(m_UnitGoal, unitVel);
             float accel = locomotion.acceleration * _context.AccelerationFactorFromDot.Evaluate(velDot);

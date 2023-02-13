@@ -234,9 +234,15 @@ namespace CapsuleController
         public bool LegalIncline(bool hitGround, RaycastHit hit)
         {
             if (!hitGround) return false;
+            float angle = GetSlope(hit);
+            return angle < maximumIncline;
+        }
+
+        public float GetSlope(RaycastHit hit)
+        {
             float dot = Vector3.Dot(Vector3.up, hit.normal);
             float angle = Mathf.Rad2Deg * Mathf.Acos(dot);
-            return angle < maximumIncline;
+            return angle;
         }
     }
 }

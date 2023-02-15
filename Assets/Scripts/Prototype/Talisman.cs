@@ -22,6 +22,11 @@ public class Talisman : Projectile, IHitDetector, IHitResponder
         if (hurtDetector != null)
         {
             HitHurtable(hurtDetector);
+            if(hit.transform.GetComponent<Projectile>())
+            {
+                TimeEffectHandler.Current.SetTemporaryTimescale(0.2f, 0f);
+                CameraEffectHandler.Current.CameraFOVEffect(0.2f, 59);
+            }
         }
         base.OnHit(hit);
     }

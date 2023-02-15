@@ -10,7 +10,7 @@ namespace CapsuleController
         public PlayerAerialState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
       
         public override void EnterState() {
-            Debug.Log("Aerial");
+            //Debug.Log("Aerial");
             if (_context.AirJumpCounter > 0)
             {
                 _context.JumpReady = true;
@@ -71,7 +71,7 @@ namespace CapsuleController
                 HandleAscent();
             }
 
-            if (_context.TimeSinceJump>0.2f)
+            if (_context.TimeSinceJump>0.5f||_context.PhysicsBody.position.y > m_entryHeight + _context.LevitateHeight||_context.PhysicsBody.velocity.y<0)
             {
                 if (grounded&&onIncline)
                 {

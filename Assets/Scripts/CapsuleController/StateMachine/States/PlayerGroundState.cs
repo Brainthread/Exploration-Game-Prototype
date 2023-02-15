@@ -7,7 +7,7 @@ namespace CapsuleController
     {
         public PlayerGroundState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
         public override void EnterState() {
-            Debug.Log("Grounded");
+            //Debug.Log("Grounded");
             _context.ShouldMaintainHeight = true;
             _context.JumpReady = true;
             (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();

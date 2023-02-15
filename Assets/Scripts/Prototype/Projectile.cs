@@ -18,7 +18,7 @@ public abstract class Projectile : MonoBehaviour
     public virtual void Initialize()
     {
         m_rigidbody = GetComponent<Rigidbody>();
-        print(m_rigidbody);
+        //print(m_rigidbody);
         m_formerPosition = transform.position;
         m_rigidbody.velocity = transform.forward * m_speed;
         m_timeSinceCreation = 0;
@@ -63,17 +63,13 @@ public abstract class Projectile : MonoBehaviour
 
     public virtual void OnHit(RaycastHit hit)
     {
-        Destroy(gameObject); 
+        DestroyProjectile();
     }
 
     public virtual void DestroyProjectile()
     {
-        Destroy(gameObject);
-    }
-
-    public virtual void OnDestroy()
-    {
-        if(m_hitEffect!=null)
+        if (m_hitEffect != null)
             Instantiate(m_hitEffect, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

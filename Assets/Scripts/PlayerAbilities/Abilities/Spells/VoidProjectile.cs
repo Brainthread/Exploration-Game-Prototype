@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class VoidProjectile : Projectile, IHitDetector, IHitResponder, IHurtDetector, IHurtResponder
 {
+    [SerializeField] private GameObject m_hurtEffect;
+
     public IHitResponder HitResponder { get { return this; } set { value = this; } }
 
     public IHurtResponder HurtResponder { get { return this; } set { value = this; } }
+
+  
 
     public bool CheckHit(HitData data)
     {
@@ -42,6 +46,11 @@ public class VoidProjectile : Projectile, IHitDetector, IHitResponder, IHurtDete
 
     public void HurtResponse(HitData data, DamageData damagedata)
     {
+        SummonHurtObject();
         Destroy(gameObject);
+    }
+    public void SummonHurtObject()
+    {
+        Instantiate(m_hurtEffect, transform.position, Quaternion.identity);
     }
 }

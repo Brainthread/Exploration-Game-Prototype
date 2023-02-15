@@ -166,7 +166,7 @@ namespace CapsuleController
                 m_timeSinceJumpPressed = 0;
                 m_jumpInput = new Vector3(0, 1, 0);
             }
-            print(m_currentState);
+            //print(m_currentState);
             m_currentState.UpdateState();
         }
 

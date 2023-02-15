@@ -134,6 +134,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   m_lifetime: 2
+  m_hurtEffect: {fileID: 5880829016432874582, guid: 4b1d4d9a3d3db714e8056e52813447d9, type: 3}
 --- !u!114 &4809548582534213748
 MonoBehaviour:
   m_ObjectHideFlags: 0

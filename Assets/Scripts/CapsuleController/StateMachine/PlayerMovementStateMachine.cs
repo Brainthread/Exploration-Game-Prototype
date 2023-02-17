@@ -72,6 +72,8 @@ namespace CapsuleController
         [Header("Glide:")]
         [SerializeField] private float m_glideMaxFallSpeed = 3f;
         [SerializeField] private float m_glideVelocityTransferSpeed = 10;
+        [SerializeField] private float m_glideVelocityDecayRate = 0.1f;
+        [SerializeField] private float m_glideMinSpeed = 3f;
 
         [System.Serializable]
         public class Locomotion
@@ -114,6 +116,8 @@ namespace CapsuleController
         public bool GlideInput { get { return m_glideInput; } }
         public float GlideMaxFallSpeed { get { return m_glideMaxFallSpeed; } }
         public float GlideTransferSpeed { get { return m_glideVelocityTransferSpeed; } }
+        public float GlideVelocityDecayRate { get { return m_glideVelocityDecayRate; } }
+        public float GlideMinSpeed { get { return m_glideMinSpeed; } }
 
 
 

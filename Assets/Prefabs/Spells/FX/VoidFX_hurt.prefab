@@ -134,7 +134,7 @@ MonoBehaviour:
   m_targetSpeed: 50
   m_range: 30
   m_directions: 2
-  m_verticalMaxSpeed: 20
+  m_verticalMaxSpeed: 50
   m_instant: 1
 --- !u!1 &7163423123586257066
 GameObject:

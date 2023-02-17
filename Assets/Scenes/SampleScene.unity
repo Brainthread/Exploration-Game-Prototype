@@ -3475,8 +3475,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   m_airJumps: 0
-  m_glideMaxFallSpeed: 8
+  m_glideMaxFallSpeed: 4
   m_glideVelocityTransferSpeed: 15
+  m_glideVelocityDecayRate: 0.3
+  m_glideMinSpeed: 5
 --- !u!114 &1879394344
 MonoBehaviour:
   m_ObjectHideFlags: 0

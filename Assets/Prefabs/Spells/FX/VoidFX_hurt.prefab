@@ -131,10 +131,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_lifeTime: 1
   m_maxForce: 2000
-  m_targetSpeed: 50
+  m_targetSpeed: 35
   m_range: 30
   m_directions: 2
-  m_verticalMaxSpeed: 50
+  m_verticalMaxSpeed: 15
   m_instant: 1
 --- !u!1 &7163423123586257066
 GameObject:

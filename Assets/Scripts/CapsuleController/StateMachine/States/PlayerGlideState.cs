@@ -46,9 +46,9 @@ namespace CapsuleController
         private void Glide()
         {
 
-            Vector3 currentHorizontalVelocity = new Vector3(_context.PhysicsBody.velocity.x, _context.GlideMinSpeed, _context.PhysicsBody.velocity.z);
+            Vector3 currentHorizontalVelocity = new Vector3(_context.PhysicsBody.velocity.x, 0, _context.PhysicsBody.velocity.z);
             Vector3 currentForwardVelocity = Vector3.Project(currentHorizontalVelocity, currentHorizontalVelocity);
-            float targetSpeed = Mathf.Clamp(currentForwardVelocity.magnitude * (1-Time.fixedDeltaTime*_context.GlideVelocityDecayRate), 0f, currentForwardVelocity.magnitude);
+            float targetSpeed = Mathf.Clamp(currentForwardVelocity.magnitude * (1-Time.fixedDeltaTime*_context.GlideVelocityDecayRate), _context.GlideMinSpeed, currentForwardVelocity.magnitude);
             Vector3 targetVelocity = targetSpeed * _context.transform.forward;
             targetVelocity.y += _context.PhysicsBody.velocity.y;
             _context.GoalVelocity = targetVelocity;

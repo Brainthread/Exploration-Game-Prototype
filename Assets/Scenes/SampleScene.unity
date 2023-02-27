@@ -3465,7 +3465,7 @@ MonoBehaviour:
     acceleration: 25
     maxAccelForce: 45
     moveForceScale: {x: 1, y: 0, z: 1}
-  m_jumpForceFactor: 10
+  m_jumpForceFactor: 8
   m_riseGravityFactor: 2
   m_fallGravityFactor: 3
   m_lowJumpFactor: 2.5
@@ -3475,7 +3475,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   m_airJumps: 0
-  m_glideMaxFallSpeed: 4
+  m_glideMaxFallSpeed: 6
   m_glideVelocityTransferSpeed: 15
   m_glideVelocityDecayRate: 0.3
   m_glideMinSpeed: 5

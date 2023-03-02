@@ -31,8 +31,7 @@ public abstract class Projectile : MonoBehaviour
 
     public virtual void Update()
     {
-        Quaternion lookRotation = Quaternion.LookRotation(m_rigidbody.velocity.normalized);
-        transform.rotation = lookRotation;
+        UpdateRotation();
         m_timeSinceCreation += Time.deltaTime;
         CheckCollision();
         m_formerPosition = transform.position;
@@ -40,6 +39,12 @@ public abstract class Projectile : MonoBehaviour
         {
             DestroyProjectile();
         }
+    }
+
+    public virtual void UpdateRotation()
+    {
+        Quaternion lookRotation = Quaternion.LookRotation(m_rigidbody.velocity.normalized);
+        transform.rotation = lookRotation;
     }
 
     public virtual void CheckCollision()

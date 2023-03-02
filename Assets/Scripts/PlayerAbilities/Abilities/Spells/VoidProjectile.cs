@@ -5,6 +5,7 @@ using UnityEngine;
 public class VoidProjectile : Projectile, IHitDetector, IHitResponder, IHurtDetector, IHurtResponder
 {
     [SerializeField] private GameObject m_hurtEffect;
+    [SerializeField] private float m_speedDecay = 2;
 
     public IHitResponder HitResponder { get { return this; } set { value = this; } }
 
@@ -20,6 +21,22 @@ public class VoidProjectile : Projectile, IHitDetector, IHitResponder, IHurtDete
     public void HitResponse(HitData hitData, DamageData damageData)
     {
         print("You hit something!! Go you!");
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        if(m_rigidbody.velocity.magnitude<10)
+        {
+            m_rigidbody.useGravity = true;
+        }
+    }
+
+    public void FixedUpdate()
+    {
+            Vector3 m_horiSpeed = m_rigidbody.velocity;
+            m_horiSpeed *= 1 - (Time.fixedDeltaTime * 1f);
+            m_rigidbody.velocity = m_horiSpeed;
     }
 
     public override void OnHit(RaycastHit hit)

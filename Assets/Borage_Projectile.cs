@@ -37,6 +37,11 @@ public class Borage_Projectile : Projectile, IHitDetector, IHitResponder, IHurtD
         }
     }
 
+    public override void UpdateRotation()
+    {
+        
+    }
+
     public override void OnHit(RaycastHit hit)
     {
         Vector3 normal = hit.normal;

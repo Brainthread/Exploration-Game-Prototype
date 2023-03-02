@@ -248,5 +248,10 @@ namespace CapsuleController
             float angle = Mathf.Rad2Deg * Mathf.Acos(dot);
             return angle;
         }
+
+        public void ResetAerialSpeed()
+        {
+           
+        }
     }
 }

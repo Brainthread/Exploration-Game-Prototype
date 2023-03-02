@@ -34,15 +34,22 @@ public abstract class Projectile : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(m_rigidbody.velocity.normalized);
         transform.rotation = lookRotation;
         m_timeSinceCreation += Time.deltaTime;
-        (bool hasCollided, RaycastHit hit) = HasCollided();
-        if (hasCollided)
-        {
-            OnHit(hit);
-        }
+        CheckCollision();
         m_formerPosition = transform.position;
         if(m_timeSinceCreation > m_lifetime)
         {
             DestroyProjectile();
+        }
+    }
+
+    public virtual void CheckCollision()
+    {
+        Vector3 direction = transform.position - m_formerPosition;
+        float rayLength = direction.magnitude;
+        (bool hasCollided, RaycastHit hit) = HasCollided(direction, rayLength);
+        if (hasCollided)
+        {
+            OnHit(hit);
         }
     }
 
@@ -51,10 +58,8 @@ public abstract class Projectile : MonoBehaviour
         m_rigidbody.AddForce(speed, ForceMode.VelocityChange);
     }
 
-    public virtual (bool, RaycastHit) HasCollided()
+    public virtual (bool, RaycastHit) HasCollided(Vector3 direction, float rayLength)
     {
-        Vector3 direction = transform.position - m_formerPosition;
-        float rayLength = direction.magnitude;
         RaycastHit hit;
         if (Physics.Raycast(m_formerPosition, direction.normalized, out hit, rayLength, m_hittableLayers))
             return (true, hit);

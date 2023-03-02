@@ -2,48 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spell_Borage : PlayerAbility
+public class Spell_Borage : PlayerAbility_ProjectileAbility
 {
-    private PlayerAbilityHandler m_handler;
-    public PlayerAbilityHandler Handler { get { return m_handler; } set { m_handler = value} }
 
-    public void Activate()
+    public override void Exit()
     {
-        throw new System.NotImplementedException();
+        base.Exit();
     }
-
-    public void ActiveUpdate()
+    public override void TriggerStart()
     {
-        throw new System.NotImplementedException();
+        base.TriggerStart();
+        Activate();
     }
-
-    public void Enter()
+    public override void TriggerStop()
     {
-        throw new System.NotImplementedException();
+        base.TriggerStop();
+
     }
-
-    public void Exit()
+    public override void Activate()
     {
-        throw new System.NotImplementedException();
-    }
+        base.Activate();
 
-    public void Initialize(PlayerAbilityHandler handler)
-    {
-        this.Handler = handler;
-    }
-
-    public void PassiveUpdate()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void TriggerStart()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void TriggerStop()
-    {
-        throw new System.NotImplementedException();
     }
 }

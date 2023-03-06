@@ -92,7 +92,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5880829016432874585}
-  - component: {fileID: 5880829016432874581}
   m_Layer: 2
   m_Name: VoidFX_hurt
   m_TagString: Untagged
@@ -117,25 +116,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5880829016432874581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5880829016432874582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d89f9a896ba94be41904f85528285af6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_lifeTime: 1
-  m_maxForce: 3e+13
-  m_targetSpeed: 35
-  m_range: 30
-  m_directions: 2
-  m_verticalMaxSpeed: 30
-  m_instant: 1
 --- !u!1 &7163423123586257066
 GameObject:
   m_ObjectHideFlags: 0

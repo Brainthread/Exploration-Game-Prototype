@@ -87,7 +87,7 @@ public class VoidEffect : MonoBehaviour
         Vector3 neededAcceleration = targetVelocity / Time.fixedDeltaTime;
         Vector3 force = Mathf.Clamp(neededAcceleration.magnitude, 0, m_maxForce)*neededAcceleration.normalized;
 
-        current.Rigidbody.velocity = targetVelocity;
+        current.Rigidbody.velocity = targetVelocity/current.Rigidbody.mass;
 
     }
 

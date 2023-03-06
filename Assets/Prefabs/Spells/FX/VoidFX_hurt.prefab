@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_lifeTime: 1
-  m_maxForce: 5e+12
+  m_maxForce: 3e+13
   m_targetSpeed: 35
   m_range: 30
   m_directions: 2

@@ -62,7 +62,7 @@ public class VoidEffect : MonoBehaviour
         Vector3 currentVelocity = current.Rigidbody.velocity;
         Vector3 offset = transform.position - current.Rigidbody.position;
 
-        /*
+        
         float yComponent = Vector3.Dot(transform.up, offset.normalized);
         float yZoneSize = (180 / m_directions);
         float yAngle = Mathf.Acos(yComponent) * Mathf.Rad2Deg - yZoneSize/2;
@@ -81,14 +81,13 @@ public class VoidEffect : MonoBehaviour
         Debug.DrawRay(current.transform.position, targetVelocity * 100, Color.red);
 
         targetVelocity.y = Mathf.Clamp(targetVelocity.y, -m_verticalMaxSpeed, m_verticalMaxSpeed);
-        */
-        Vector3 targetVelocity = new Vector3(offset.x, 0, offset.z).normalized*m_targetSpeed + Vector3.up*m_verticalMaxSpeed;
+        
         Vector3 velocityRelTarget = Vector3.Project(currentVelocity, targetVelocity);
         targetVelocity = targetVelocity - velocityRelTarget;
         Vector3 neededAcceleration = targetVelocity / Time.fixedDeltaTime;
         Vector3 force = Mathf.Clamp(neededAcceleration.magnitude, 0, m_maxForce)*neededAcceleration.normalized;
 
-        current.ApplyForce(force*Time.fixedDeltaTime, ForceMode.VelocityChange);
+        current.Rigidbody.velocity = targetVelocity;
 
     }
 

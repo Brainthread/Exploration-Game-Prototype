@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: -194223408749766942}
   - component: {fileID: 4809548582534213748}
   m_Layer: 7
-  m_Name: Void
+  m_Name: MapleSeed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -226,14 +226,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e6637431a103a4cba54a077e91b894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_speed: 20
+  m_speed: 30
   m_hitEffect: {fileID: 5880829016432874582, guid: fdcdb77a6b61dd740908ac21d119eb17, type: 3}
   m_hittableLayers:
     serializedVersion: 2
     m_Bits: 65
-  m_lifetime: 4
+  m_lifetime: 6
   m_hurtEffect: {fileID: 5880829016432874582, guid: 4b1d4d9a3d3db714e8056e52813447d9, type: 3}
-  m_speedDecay: 2
+  m_speedDecay: 3
 --- !u!114 &4809548582534213748
 MonoBehaviour:
   m_ObjectHideFlags: 0

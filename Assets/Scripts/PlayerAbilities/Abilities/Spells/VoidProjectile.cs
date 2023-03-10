@@ -26,7 +26,7 @@ public class VoidProjectile : Projectile, IHitDetector, IHitResponder, IHurtDete
     public override void Update()
     {
         base.Update();
-        if(m_rigidbody.velocity.magnitude<10)
+        if(m_rigidbody.velocity.magnitude<3)
         {
             m_rigidbody.useGravity = true;
         }

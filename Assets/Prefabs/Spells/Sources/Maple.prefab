@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4063359227004991739}
   - component: {fileID: -2044547122946009105}
   m_Layer: 0
-  m_Name: VoidSpell
+  m_Name: Maple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

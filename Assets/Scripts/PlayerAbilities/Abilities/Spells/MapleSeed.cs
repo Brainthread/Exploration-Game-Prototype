@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spell_Void : PlayerAbility_ProjectileAbility
+public class MapleSeed : PlayerAbility_ProjectileAbility
 {
     [SerializeField] private float m_chargeCapacity;
     private float m_charge = 0;
     private bool m_isCharging = false;
     private GameObject m_spellEffect;
-
 
     public override void Exit()
     {

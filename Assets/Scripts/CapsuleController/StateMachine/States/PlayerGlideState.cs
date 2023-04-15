@@ -6,6 +6,7 @@ namespace CapsuleController
 {
     public class PlayerGlideState : PlayerBaseState
     {
+        private float m_glideTimeSeconds = 0;
         public PlayerGlideState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory)
         {
 
@@ -18,16 +19,18 @@ namespace CapsuleController
 
         public override void EnterState()
         {
-            
+
         }
 
         public override void ExitState()
         {
-
+            m_glideTimeSeconds = 0;
         }
 
         public override void FixedUpdateState()
         {
+            m_glideTimeSeconds+= Time.fixedDeltaTime;
+            m_glideTimeSeconds = Mathf.Clamp(m_glideTimeSeconds, 0, 5);
             (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
             bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
             bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
@@ -67,18 +70,18 @@ namespace CapsuleController
 
             if(currentVelocity != 0)
             {
-                dragFactor = (((Mathf.Abs(currentVelocity) / Mathf.Abs(targetVelocity))-1)/50)+1; //Shoddy maths, replace at some point
+                dragFactor = ((Mathf.Abs(offset))/100)+1; //Shoddy maths, replace at some point
             }
-            dragFactor = dragFactor*dragFactor*dragFactor*dragFactor;
+            dragFactor = dragFactor*dragFactor*dragFactor*dragFactor; //Shoddy maths, replace at some point
 
-            dragFactor = Math.Clamp(dragFactor, 0, 100);
+            dragFactor = Math.Clamp(dragFactor, 0, 100); //Shoddy maths, replace at some point
 
             float requiredForce = offset / Time.fixedDeltaTime;
-            float force = Mathf.Clamp(requiredForce, -maxAcceleration, maxAcceleration);
+            float force = Mathf.Clamp(requiredForce, -maxAcceleration, maxAcceleration); 
 
-            _context.PhysicsBody.AddForce(force * dragFactor * Vector3.up);
-            if(offset>0.3f)
-                _context.PhysicsBody.AddForce(10 * dragFactor * _context.transform.forward);
+            _context.PhysicsBody.AddForce(force * dragFactor * Vector3.up); //Shoddy maths, replace at some point
+            if (offset>0.3f)
+                _context.PhysicsBody.AddForce(10 * dragFactor * dragFactor * m_glideTimeSeconds * _context.transform.forward); //Shoddy maths, replace at some point
 
         }
 

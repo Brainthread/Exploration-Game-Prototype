@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 5880829016432874585}
   - component: {fileID: -6036596741934722892}
   m_Layer: 2
-  m_Name: VoidFX_hurt
+  m_Name: Maple Effect M
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

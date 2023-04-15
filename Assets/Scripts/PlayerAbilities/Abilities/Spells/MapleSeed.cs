@@ -2,42 +2,83 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapleSeed : PlayerAbility_ProjectileAbility
+public class MapleSeed : Projectile, IHitDetector, IHitResponder, IHurtDetector, IHurtResponder
 {
-    [SerializeField] private float m_chargeCapacity;
-    private float m_charge = 0;
-    private bool m_isCharging = false;
-    private GameObject m_spellEffect;
+    [SerializeField] private GameObject m_hurtEffect;
+    [SerializeField] private float m_speedDecay = 2;
 
-    public override void Exit()
-    {
-        base.Exit();
-        m_charge = 0;
-        m_isCharging = false;
-    }
-    public override void TriggerStart()
-    {
-        base.TriggerStart();
+    public IHitResponder HitResponder { get { return this; } set { value = this; } }
 
-    }
-    public override void TriggerStop()
+    public IHurtResponder HurtResponder { get { return this; } set { value = this; } }
+
+  
+
+    public bool CheckHit(HitData data)
     {
-        if (VoidEffect.Current != null)
+        return true;
+    }
+
+    public void HitResponse(HitData hitData, DamageData damageData)
+    {
+        print("You hit something!! Go you!");
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        if(m_rigidbody.velocity.magnitude<3)
         {
-            Destroy(VoidEffect.Current.gameObject);
-            return;
+            m_rigidbody.useGravity = true;
         }
-        if (m_projectileBuf)
-        {
-            return;
-        }
-        base.TriggerStop();
-        Activate();
-        m_charge = 0f;
     }
-    public override void Activate()
-    {
-        base.Activate();
 
+    public void FixedUpdate()
+    {
+         Vector3 m_horiSpeed = m_rigidbody.velocity;
+         m_horiSpeed *= 1 - (Time.fixedDeltaTime * 1f);
+         m_rigidbody.velocity = m_horiSpeed;
+    }
+
+    public override void OnHit(RaycastHit hit)
+    {
+        IHurtDetector hurtDetector = hit.transform.GetComponent<IHurtDetector>();
+        if (hurtDetector != null)
+        {
+            HitHurtable(hurtDetector, hit);
+        }
+        SummonEffectAtHit(hit, m_hitEffect);
+        DestroyProjectile();
+    }
+
+    public void HitHurtable(IHurtDetector hurtDetector, RaycastHit hit)
+    {
+        HitData hitRegistration = new HitData();
+        hitRegistration.Hurtdetector = hurtDetector;
+        hitRegistration.HitDetector = this;
+        if (hitRegistration.Validate())
+        {
+            hurtDetector.HurtResponder.HurtResponse(hitRegistration, m_damageData);
+            this.HitResponse(hitRegistration, m_damageData);
+        }
+    }
+
+    public void HurtResponse(HitData data, DamageData damagedata)
+    {
+        SummonHurtObject();
+        Destroy(gameObject);
+    }
+    public void SummonEffectAtHit(RaycastHit hit, GameObject effect)
+    {
+        if (m_hitEffect != null)
+            Instantiate(effect, hit.point, Quaternion.identity);
+    }
+    public void SummonHurtObject()
+    {
+        Instantiate(m_hurtEffect, transform.position, Quaternion.identity);
+    }
+
+    public override void DestroyProjectile()
+    {
+        Destroy(gameObject);
     }
 }

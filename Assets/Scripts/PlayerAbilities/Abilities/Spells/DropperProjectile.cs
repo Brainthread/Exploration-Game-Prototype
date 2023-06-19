@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapleSeed : Projectile, IHitDetector, IHitResponder, IHurtDetector, IHurtResponder
+public class DropperProjectile : Projectile, IHitDetector, IHitResponder, IHurtDetector, IHurtResponder
 {
     [SerializeField] private GameObject m_hurtEffect;
     [SerializeField] private float m_speedDecay = 2;

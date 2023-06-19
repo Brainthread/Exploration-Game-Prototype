@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace CapsuleController
 {
-    public class PlayerWallrunState : PlayerBaseState
+    public class PlayerJumpState : PlayerBaseState
     {
-        public PlayerWallrunState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
+        public PlayerJumpState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
         private bool triggerFlag = false;
         public override void EnterState()
         {

@@ -3,25 +3,11 @@ using UnityEngine;
 
 namespace CapsuleController
 {
-    public class PlayerJumpState : PlayerBaseState
+    public class PlayerWalljumpState : PlayerBaseState
     {
-        public PlayerJumpState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
+        public PlayerWalljumpState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
         private bool triggerFlag = false;
-        public override void EnterState()
-        {
-            (bool hitGround, RaycastHit rayHit) = _context.RaycastToGround();
-            if (_context.JumpReady)
-            {
-                if (_context.PhysicsBody.velocity.y < 0f)
-                {
-                    Vector3 newVel = _context.PhysicsBody.velocity;
-                    newVel.y = 0;
-                    _context.PhysicsBody.velocity = newVel;
-                }
-                triggerFlag = true;
-            }
 
-        }
         public override void UpdateState()
         {
 
@@ -38,6 +24,23 @@ namespace CapsuleController
         {
 
         }
+
+        public override void EnterState()
+        {
+            (bool hitGround, RaycastHit rayHit) = _context.RaycastToGround();
+            if (_context.JumpReady)
+            {
+                if (_context.PhysicsBody.velocity.y < 0f)
+                {
+                    Vector3 newVel = _context.PhysicsBody.velocity;
+                    newVel.y = 0;
+                    _context.PhysicsBody.velocity = newVel;
+                }
+                triggerFlag = true;
+            }
+
+        }
+
         public override void FixedUpdateState()
         {
             if (triggerFlag)

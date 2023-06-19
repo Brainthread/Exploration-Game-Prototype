@@ -13,12 +13,9 @@ public class MapleEffect : MonoBehaviour
     [SerializeField] private float m_force = 450f;
     [SerializeField] private float m_targetSpeed = 25f;
     [SerializeField] private float m_range = 10;
-    [SerializeField] private int m_directions = 1;
-    [SerializeField] private float m_verticalMaxSpeed = 20;
 
     private float m_timeSinceSpawn = 0;
     private List<ForceReciever> m_registeredForceRecievers = new List<ForceReciever>(10);
-    private List<Vector3> m_startPosition = new List<Vector3>(10);
 
     // Start is called before the first frame update
     void Start()

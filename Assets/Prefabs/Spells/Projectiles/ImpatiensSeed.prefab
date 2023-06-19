@@ -110,10 +110,10 @@ GameObject:
   - component: {fileID: 3328068676445992130}
   - component: {fileID: 7005666927698024133}
   - component: {fileID: 1841988058376161839}
-  - component: {fileID: -194223408749766942}
   - component: {fileID: 4809548582534213748}
+  - component: {fileID: 6493286654139283994}
   m_Layer: 7
-  m_Name: MapleSeed
+  m_Name: ImpatiensSeed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -199,7 +199,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!135 &1841988058376161839
 SphereCollider:
@@ -214,26 +214,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.8
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-194223408749766942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3328068676445992128}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3e6637431a103a4cba54a077e91b894, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_speed: 30
-  m_hitEffect: {fileID: 5880829016432874582, guid: fdcdb77a6b61dd740908ac21d119eb17, type: 3}
-  m_hittableLayers:
-    serializedVersion: 2
-    m_Bits: 1
-  m_lifetime: 6
-  m_hurtEffect: {fileID: 5880829016432874582, guid: 4b1d4d9a3d3db714e8056e52813447d9, type: 3}
-  m_speedDecay: 3
 --- !u!114 &4809548582534213748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,3 +227,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_rigidbody: {fileID: 7005666927698024133}
+--- !u!114 &6493286654139283994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3328068676445992128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 524f65fc591d1f84089415569d1940dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_speed: 20
+  m_hitEffect: {fileID: 5880829016432874582, guid: 7233b30e70043e54a92bf3c347edd937, type: 3}
+  m_hittableLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  m_lifetime: 9
+  m_hurtEffect: {fileID: 0}
+  m_speedDecay: 333

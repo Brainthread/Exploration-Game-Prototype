@@ -5,21 +5,21 @@ using UnityEngine;
 public class Spell_Borage : PlayerAbility_ProjectileAbility
 {
 
-    public override void Exit()
+    public void Exit()
     {
         base.Exit();
     }
-    public override void TriggerStart()
+    public void TriggerStart()
     {
         base.TriggerStart();
         Activate();
     }
-    public override void TriggerStop()
+    public void TriggerStop()
     {
         base.TriggerStop();
 
     }
-    public override void Activate()
+    public void Activate()
     {
         base.Activate();
 

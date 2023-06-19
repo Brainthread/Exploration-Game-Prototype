@@ -7,6 +7,7 @@ namespace CapsuleController
     public class PlayerGlideState : PlayerBaseState
     {
         private float m_glideTimeSeconds = 0;
+        private const float m_maxForwardGlideForce = 50f;
         public PlayerGlideState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory)
         {
 
@@ -29,7 +30,7 @@ namespace CapsuleController
 
         public override void FixedUpdateState()
         {
-            m_glideTimeSeconds+= Time.fixedDeltaTime;
+            m_glideTimeSeconds += Time.fixedDeltaTime;
             m_glideTimeSeconds = Mathf.Clamp(m_glideTimeSeconds, 0, 5);
             (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
             bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
@@ -48,6 +49,7 @@ namespace CapsuleController
 
         private void Glide()
         {
+            /*
             Vector3 currentHorizontalVelocity = new Vector3(_context.PhysicsBody.velocity.x, 0, _context.PhysicsBody.velocity.z);
             Vector3 currentForwardVelocity = Vector3.Project(currentHorizontalVelocity, currentHorizontalVelocity);
             float targetSpeed = Mathf.Clamp(currentForwardVelocity.magnitude * (1-Time.fixedDeltaTime*_context.GlideVelocityDecayRate), _context.GlideMinSpeed, currentForwardVelocity.magnitude);
@@ -55,7 +57,24 @@ namespace CapsuleController
             targetVelocity.y += _context.PhysicsBody.velocity.y;
             _context.GoalVelocity = targetVelocity;
             _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, targetVelocity, Time.fixedDeltaTime*_context.GlideTransferSpeed);
+            */
             //_context.PhysicsBody.AddForce(requiredForce*Time.fixedDeltaTime, ForceMode.VelocityChange);
+
+            Vector3 m_UnitGoal = _context.MoveInput.normalized;
+            Vector3 unitVel = _context.GoalVelocity.normalized;
+            float velDot = Vector3.Dot(m_UnitGoal, unitVel);
+            float accel = _context.AerialLocomotion.acceleration/4 * _context.AccelerationFactorFromDot.Evaluate(velDot);
+            Vector3 goalVel = m_UnitGoal * Mathf.Clamp(Vector3.ProjectOnPlane(_context.PhysicsBody.velocity, Vector3.up).magnitude, _context.AerialLocomotion.maxSpeed*2, 10000) * _context.SpeedFactor;
+
+            _context.GoalVelocity = Vector3.MoveTowards(_context.GoalVelocity,
+                                            goalVel,
+                                            accel * Time.fixedDeltaTime);
+
+            Vector3 tempGoal = _context.GoalVelocity;
+            tempGoal.y = _context.PhysicsBody.velocity.y;
+            _context.GoalVelocity = tempGoal;
+
+            _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, _context.GoalVelocity, accel * Time.fixedDeltaTime);
         }
 
         private void MaintainVerticalVelocity()
@@ -79,11 +98,19 @@ namespace CapsuleController
             float requiredForce = offset / Time.fixedDeltaTime;
             float force = Mathf.Clamp(requiredForce, -maxAcceleration, maxAcceleration); 
 
-            _context.PhysicsBody.AddForce(force * dragFactor * Vector3.up); //Shoddy maths, replace at some point
+            
+            _context.PhysicsBody.AddForce(force * dragFactor * Vector3.up);
+            
+            /*
             if (offset>0.3f)
-                _context.PhysicsBody.AddForce(10 * dragFactor * dragFactor * m_glideTimeSeconds * _context.transform.forward); //Shoddy maths, replace at some point
-
+            {
+                float forwardPushForce = Mathf.Clamp(6 * dragFactor * dragFactor * dragFactor * m_glideTimeSeconds, 0, m_maxForwardGlideForce);
+                _context.PhysicsBody.AddForce(_context.transform.forward * forwardPushForce); //Shoddy maths, replace at some point
+            }
+            */
+            
         }
+
 
         public override void InitializeSubState()
         {

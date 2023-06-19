@@ -14,7 +14,8 @@ public abstract class Projectile : MonoBehaviour
     protected Rigidbody m_rigidbody;
     protected Vector3 m_formerPosition;
     protected float m_timeSinceCreation;
-
+    protected Quaternion m_effectSpawnRotation = Quaternion.identity;
+    public Quaternion EffectSpawnRotation { get { return m_effectSpawnRotation; } set { m_effectSpawnRotation = value; } }
     public virtual void Initialize()
     {
         m_rigidbody = GetComponent<Rigidbody>();
@@ -46,6 +47,7 @@ public abstract class Projectile : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(m_rigidbody.velocity.normalized);
         transform.rotation = lookRotation;
     }
+
 
     public virtual void CheckCollision()
     {
@@ -79,7 +81,7 @@ public abstract class Projectile : MonoBehaviour
     public virtual void DestroyProjectile()
     {
         if (m_hitEffect != null)
-            Instantiate(m_hitEffect, transform.position, Quaternion.identity);
+            Instantiate(m_hitEffect, transform.position, m_effectSpawnRotation);
         Destroy(gameObject);
     }
 }

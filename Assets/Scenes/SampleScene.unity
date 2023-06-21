@@ -3750,6 +3750,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   m_airJumps: 0
+  m_glideMaxMovementSpeed: 20
+  m_glideMovementAcceleration: 8
+  m_glideMovementResetFactor: 2
   m_glideMaxFallSpeed: 3
   m_glideVelocityTransferSpeed: 15
   m_glideVelocityDecayRate: 0.1

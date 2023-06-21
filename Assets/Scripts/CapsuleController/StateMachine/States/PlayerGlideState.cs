@@ -49,22 +49,15 @@ namespace CapsuleController
 
         private void Glide()
         {
-            /*
-            Vector3 currentHorizontalVelocity = new Vector3(_context.PhysicsBody.velocity.x, 0, _context.PhysicsBody.velocity.z);
-            Vector3 currentForwardVelocity = Vector3.Project(currentHorizontalVelocity, currentHorizontalVelocity);
-            float targetSpeed = Mathf.Clamp(currentForwardVelocity.magnitude * (1-Time.fixedDeltaTime*_context.GlideVelocityDecayRate), _context.GlideMinSpeed, currentForwardVelocity.magnitude);
-            Vector3 targetVelocity = targetSpeed * _context.transform.forward;
-            targetVelocity.y += _context.PhysicsBody.velocity.y;
-            _context.GoalVelocity = targetVelocity;
-            _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, targetVelocity, Time.fixedDeltaTime*_context.GlideTransferSpeed);
-            */
-            //_context.PhysicsBody.AddForce(requiredForce*Time.fixedDeltaTime, ForceMode.VelocityChange);
-
             Vector3 m_UnitGoal = _context.MoveInput.normalized;
             Vector3 unitVel = _context.GoalVelocity.normalized;
             float velDot = Vector3.Dot(m_UnitGoal, unitVel);
-            float accel = _context.AerialLocomotion.acceleration/4 * _context.AccelerationFactorFromDot.Evaluate(velDot);
-            Vector3 goalVel = m_UnitGoal * Mathf.Clamp(Vector3.ProjectOnPlane(_context.PhysicsBody.velocity, Vector3.up).magnitude, _context.AerialLocomotion.maxSpeed*2, 10000) * _context.SpeedFactor;
+            float accel = _context.GlideMovementAcceleration * _context.AccelerationFactorFromDot.Evaluate(velDot);
+            Vector3 goalVel = m_UnitGoal * Mathf.Clamp(Vector3.ProjectOnPlane(_context.PhysicsBody.velocity, Vector3.up).magnitude, _context.GlideMaxMovementSpeed, 10000) * _context.SpeedFactor;
+            if(m_UnitGoal == Vector3.zero)
+            {
+                goalVel *= _context.GlideMovementResetFactor;
+            }
 
             _context.GoalVelocity = Vector3.MoveTowards(_context.GoalVelocity,
                                             goalVel,

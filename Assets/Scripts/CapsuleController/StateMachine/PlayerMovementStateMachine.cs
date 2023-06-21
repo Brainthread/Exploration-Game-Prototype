@@ -70,6 +70,9 @@ namespace CapsuleController
         [SerializeField] private int m_airJumps = 2;
 
         [Header("Glide:")]
+        [SerializeField] private float m_glideMaxMovementSpeed = 10f;
+        [SerializeField] private float m_glideMovementAcceleration = 5f;
+        [SerializeField] private float m_glideMovementResetFactor = 1.5f;
         [SerializeField] private float m_glideMaxFallSpeed = 3f;
         [SerializeField] private float m_glideVelocityTransferSpeed = 10;
         [SerializeField] private float m_glideVelocityDecayRate = 0.1f;
@@ -87,60 +90,60 @@ namespace CapsuleController
         private PlayerBaseState m_currentState;
         private PlayerStateFactory m_states;
 
-        public PlayerBaseState CurrentState { get { return m_currentState; } set { m_currentState = value; } }
+        public PlayerBaseState CurrentState { get => m_currentState; set => m_currentState = value; }
+
+        public Rigidbody PhysicsBody => m_rigidbody;
+        public float LevitateHeight => m_levitateHeight;
+        public float LevitateStrength => m_rideSpringStrength;
+        public float LevitateDamper => m_rideSpringDamper;
+        public Vector3 GravitationalForce => m_gravitationalForce;
+        public bool ShouldMaintainHeight { get => m_shouldMaintainHeight; set => m_shouldMaintainHeight = value; }
 
 
-        public Rigidbody PhysicsBody { get { return m_rigidbody; } }
-        public float LevitateHeight { get { return m_levitateHeight; } }
-        public float LevitateStrength { get { return m_rideSpringStrength; } }
-        public float LevitateDamper { get { return m_rideSpringDamper; } }
-        public Vector3 GravitationalForce { get { return m_gravitationalForce; } }
-        public bool ShouldMaintainHeight { get { return m_shouldMaintainHeight; } set { m_shouldMaintainHeight = value; } }
-
-
-
-
-        public Vector3 GoalVelocity { get { return m_GoalVel; } set { m_GoalVel = value; } }
-        public AnimationCurve AccelerationFactorFromDot { get { return m_accelerationFactorFromDot; } set { m_accelerationFactorFromDot = value; } }
-        public AnimationCurve MaxAccelerationForceFromDot { get { return m_maxAccelerationForceFactorFromDot; } }
-        public float SpeedFactor { get { return m_speedFactor; } }
-        public Vector3 MoveForceScale { get { return m_moveForceScale; } }
-        public float MaxAccelerationForceFactor { get { return m_maxAccelForceFactor; } }
-        public Locomotion WalkLocomotion { get { return walkLocomotion; } }
-        public Locomotion RunLocomotion { get { return runLocomotion; } }
-        public Locomotion AerialLocomotion { get { return aerialLocomotion; } }
+        public Vector3 GoalVelocity { get => m_GoalVel; set => m_GoalVel = value; }
+        public AnimationCurve AccelerationFactorFromDot { get => m_accelerationFactorFromDot; set => m_accelerationFactorFromDot = value; }
+        public AnimationCurve MaxAccelerationForceFromDot => m_maxAccelerationForceFactorFromDot;
+        public float SpeedFactor => m_speedFactor;
+        public Vector3 MoveForceScale => m_moveForceScale;
+        public float MaxAccelerationForceFactor => m_maxAccelForceFactor;
+        public Locomotion WalkLocomotion => walkLocomotion;
+        public Locomotion RunLocomotion => runLocomotion;
+        public Locomotion AerialLocomotion => aerialLocomotion;
 
 
 
 
-        public bool GlideInput { get { return m_glideInput; } }
-        public float GlideMaxFallSpeed { get { return m_glideMaxFallSpeed; } }
-        public float GlideTransferSpeed { get { return m_glideVelocityTransferSpeed; } }
-        public float GlideVelocityDecayRate { get { return m_glideVelocityDecayRate; } }
-        public float GlideMinSpeed { get { return m_glideMinSpeed; } }
+        public bool GlideInput => m_glideInput;
+        public float GlideMaxFallSpeed => m_glideMaxFallSpeed;
+        public float GlideTransferSpeed => m_glideVelocityTransferSpeed;
+        public float GlideVelocityDecayRate => m_glideVelocityDecayRate;
+        public float GlideMinSpeed => m_glideMinSpeed;
+
+        public float GlideMaxMovementSpeed => m_glideMaxMovementSpeed;
+        public float GlideMovementAcceleration => m_glideMovementAcceleration;
+        public float GlideMovementResetFactor => m_glideMovementResetFactor;
 
 
 
-        
-        public Vector3 MoveInput { get { return m_moveInput; } }
-        public bool IsRunning { get { return m_isRunning; } }
-
-        public float FallGravityFactor { get { return m_fallGravityFactor; } }
+        public Vector3 MoveInput => m_moveInput;
+        public bool IsRunning => m_isRunning;
+        public float FallGravityFactor => m_fallGravityFactor;
 
 
 
 
-        public bool JumpReady { get { return m_jumpReady; } set { m_jumpReady = value; } }
-        public float TimeSinceJumpPressed { get { return m_timeSinceJumpPressed; } set { m_timeSinceJumpPressed = value; } }
-        public float JumpBuffer { get { return m_jumpBuffer; } }
-        public float TimeSinceUngrounded { get { return m_timeSinceUngrounded; } set { m_timeSinceUngrounded = value; } }
-        public float CoyoteTime { get { return m_coyoteTime; } }
-        public bool IsJumping { get { return m_isJumping; } set { m_isJumping = value; } }
-        public float JumpForceFactor { get { return m_jumpForceFactor; } }
-        public float TimeSinceJump { get { return m_timeSinceJump; } set { m_timeSinceJump = value; } }
+        public bool JumpReady { get => m_jumpReady; set => m_jumpReady = value; }
+        public float TimeSinceJumpPressed { get => m_timeSinceJumpPressed; set => m_timeSinceJumpPressed = value; }
+        public float JumpBuffer { get => m_jumpBuffer; }
+        public float TimeSinceUngrounded { get => m_timeSinceUngrounded; set => m_timeSinceUngrounded = value; }
+        public float CoyoteTime { get => m_coyoteTime; }
+        public bool IsJumping { get => m_isJumping; set => m_isJumping = value; }
+        public float JumpForceFactor { get => m_jumpForceFactor; }
+        public float TimeSinceJump { get => m_timeSinceJump; set => m_timeSinceJump = value; }
 
-        public int AirJumpNumber { get { return m_airJumps; } }
-        public int AirJumpCounter { get { return m_airJumpCounter; } set { m_airJumpCounter = value; } }
+        public int AirJumpNumber { get => m_airJumps; }
+        public int AirJumpCounter { get => m_airJumpCounter; set => m_airJumpCounter = value; }
+
 
         void Awake()
         {

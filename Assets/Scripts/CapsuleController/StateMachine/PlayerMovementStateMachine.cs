@@ -82,7 +82,14 @@ namespace CapsuleController
         [SerializeField] private float m_wallrunMinimumIncline = 60;
         [SerializeField] private float m_wallrunRunSpeed = 1.5f;
         [SerializeField] private LayerMask m_wallrunnableLayers;
-        [SerializeField] private float m_wallrunAttachmentPower = 4f;
+        [SerializeField] private float m_wallrunAttachmentForce = 4f;
+        [SerializeField] private float m_wallrunCameraTilt = 10f;
+
+
+
+        [Header("Walljumping:")]
+        [SerializeField] private float m_walljumpSideForce = 10;
+        [SerializeField] private float m_walljumpUpForce = 10;
 
 
         [System.Serializable]
@@ -159,7 +166,12 @@ namespace CapsuleController
         public float WallrunSlideAccelerationCoefficient => m_wallrunSlideAcceleration;
         public float WallrunRunSpeed => m_wallrunRunSpeed;
         public LayerMask WallrunnableLayers => m_wallrunnableLayers;
-        public float WallrunAttachmentForce => m_wallrunAttachmentPower;
+        public float WallrunAttachmentForce => m_wallrunAttachmentForce;
+        public float WallrunCameraTilt => m_wallrunCameraTilt;
+
+
+        public float WalljumpSideForce => m_walljumpSideForce;
+        public float WalljumpUpForce => m_walljumpUpForce;
 
 
 

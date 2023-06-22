@@ -7,6 +7,10 @@ namespace CapsuleController
     {
         private Vector3 m_entryVelocity;
         private float m_entryHeight;
+        private float m_influence = 1;
+        private float m_influenceGrowth = 1f;
+        private float m_minInfluence = 0.1f;
+        private float m_maxInfluence = 1;
         public PlayerAerialState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
       
         public override void EnterState() {
@@ -17,7 +21,7 @@ namespace CapsuleController
             }
             m_entryVelocity = _context.PhysicsBody.velocity;
             m_entryHeight = _context.transform.position.y;
-
+            m_influence = m_minInfluence;
         }
         public override void UpdateState() {
             (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
@@ -44,7 +48,10 @@ namespace CapsuleController
             {
                 SwitchState(_factory.Glide());
             }
- 
+            if(m_influence < m_maxInfluence)
+            {
+                m_influence += Time.deltaTime * m_influenceGrowth;
+            }
         }
         public override void ExitState() { 
         
@@ -87,12 +94,13 @@ namespace CapsuleController
                 }
             }
 
-            if(PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
+            if(PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
             {
                 SwitchState(_factory.Wallrunning());
             }
 
-            Move(rayHit, _context.AerialLocomotion);
+            if(_context.LocalMoveDirection != Vector3.zero)
+                Move(rayHit, _context.AerialLocomotion);
         }
 
         private void HandleFall()
@@ -116,7 +124,7 @@ namespace CapsuleController
             Vector3 m_UnitGoal = _context.WorldMoveDirection.normalized;
             Vector3 unitVel = _context.GoalVelocity.normalized;
             float velDot = Vector3.Dot(m_UnitGoal, unitVel);
-            float accel = locomotion.acceleration * _context.AccelerationFactorFromDot.Evaluate(velDot);
+            float accel = locomotion.acceleration * m_influence * _context.AccelerationFactorFromDot.Evaluate(velDot);
             Vector3 goalVel = m_UnitGoal * Mathf.Clamp(Vector3.ProjectOnPlane(_context.PhysicsBody.velocity, Vector3.up).magnitude, locomotion.maxSpeed, 10000) * _context.SpeedFactor;
             
             _context.GoalVelocity = Vector3.MoveTowards(_context.GoalVelocity,

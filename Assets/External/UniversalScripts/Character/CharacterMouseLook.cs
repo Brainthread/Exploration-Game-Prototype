@@ -6,7 +6,12 @@ public class CharacterMouseLook : MonoBehaviour
 {
     [SerializeField] private float mouseSensitivity = 10.0f;
     [SerializeField] private float clampAngle = 80.0f;
+
+
+    //The split below is a stopgap solution, should not be two separate entities
     [SerializeField] private Camera myCamera = null;
+    [SerializeField] private GameObject cameraHolder;
+
     //[SerializeField] private bool invertY = false;
 
     private float rotY = 0.0f; // rotation around the up/y axis
@@ -18,7 +23,7 @@ public class CharacterMouseLook : MonoBehaviour
     void Start()
     {
         rotY = transform.localRotation.eulerAngles.y;
-        rotX = myCamera.transform.localRotation.eulerAngles.x;
+        rotX = cameraHolder.transform.localRotation.eulerAngles.x;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -34,14 +39,17 @@ public class CharacterMouseLook : MonoBehaviour
 
 
         Vector3 bodyRot = transform.localRotation.eulerAngles;
+        Vector3 viewRot = Vector3.zero;
         Vector3 camRot = Vector3.zero;
 
         bodyRot.y = rotY;
-        camRot.x = rotX;
+        viewRot.x = rotX;
+        camRot.z = rotZ;
 
         rotZ = Mathf.MoveTowards(rotZ, targetRotZ, deltaZ*Time.deltaTime);
         transform.localRotation = Quaternion.Euler(bodyRot);
-        myCamera.transform.localRotation = Quaternion.identity * Quaternion.Euler(camRot) * Quaternion.Euler(new Vector3(0, 0, rotZ));
+        cameraHolder.transform.localRotation = Quaternion.Euler(viewRot);
+        myCamera.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, rotZ));
     }
 
     public Vector2 GetMouseMovement ()

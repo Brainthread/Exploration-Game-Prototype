@@ -6,7 +6,7 @@ namespace CapsuleController
     public class PlayerWallrunState : PlayerBaseState
     {
         public PlayerWallrunState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
-
+        private Vector3 lastInput = Vector3.zero;
         public override void EnterState()
         {
             _context.PhysicsBody.useGravity = false;
@@ -42,6 +42,8 @@ namespace CapsuleController
             bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
             bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
 
+            if(_context.LocalMoveDirection.x != 0)
+                lastInput = _context.LocalMoveDirection;
             
             if(grounded&&onIncline)
             {
@@ -49,9 +51,9 @@ namespace CapsuleController
                 return;
             }
 
-            (bool wallWasHit, RaycastHit wallHit) = FindWallrunSurface(_context.LocalMoveDirection, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers);
+            (bool wallWasHit, RaycastHit wallHit) = FindWallrunSurface(lastInput, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers);
 
-            if (!wallWasHit||_context.LocalMoveDirection.z<=0)
+            if (!wallWasHit)
             {
                 SwitchState(_factory.Aerial());
                 return;
@@ -59,9 +61,11 @@ namespace CapsuleController
 
             PlayerMovementStateMachine.Locomotion locomotion = _context.IsRunning ? _context.RunLocomotion : _context.WalkLocomotion;
             Move(locomotion, wallHit.normal);
-            //AttachToWall(wallHit, _context.LocalMoveDirection);
-            _context.GetComponent<CharacterMouseLook>().DoTilt(20*Mathf.Sign(_context.LocalMoveDirection.x), 120);
+            AttachToWall(wallHit, _context.LocalMoveDirection);
+            _context.GetComponent<CharacterMouseLook>().DoTilt(10*Mathf.Sign(_context.LocalMoveDirection.x), 120);
             Slide();
+            if (_context.TimeSinceJumpPressed < _context.JumpBuffer)
+                Jump(wallHit.normal);
         }
 
         private void Move(PlayerMovementStateMachine.Locomotion locomotion, Vector3 normal)
@@ -105,11 +109,32 @@ namespace CapsuleController
             _context.PhysicsBody.AddForce((_context.GravitationalForce * (_context.WallrunSlideAccelerationCoefficient*factor)));
         }
 
-
-        public static bool ShouldBeAttached(Vector3 moveInput, Vector3 position, Vector3 contextRight, float attachmentDistance, LayerMask layers)
+        private void Jump(Vector3 normal)
         {
-            (bool hitWall, RaycastHit raycastHit) = FindWallrunSurface(moveInput, position, contextRight, attachmentDistance, layers);
-            if (!hitWall||moveInput.z<=0)
+            normal.y = 0; 
+            _context.JumpReady = false;
+            _context.ShouldMaintainHeight = false;
+            _context.IsJumping = true;
+            Vector3 jumpVector = new Vector3() + normal.normalized * _context.WalljumpSideForce;
+            jumpVector += Vector3.up * _context.WalljumpUpForce;
+
+            _context.PhysicsBody.AddForce(jumpVector, ForceMode.VelocityChange);
+
+            _context.TimeSinceJumpPressed = _context.JumpBuffer;
+            _context.TimeSinceJump = 0f;
+            _context.TimeSinceUngrounded = _context.CoyoteTime;
+            _context.GoalVelocity = jumpVector;
+        }
+
+
+        public static bool ShouldBeAttached(Vector3 moveInput, Vector3 position, PlayerMovementStateMachine context, float attachmentDistance, LayerMask layers)
+        {
+            (bool hitWall, RaycastHit raycastHit) = FindWallrunSurface(moveInput, position, context.transform.right, attachmentDistance, layers);
+            
+            Vector3 contextVelocity = context.PhysicsBody.velocity;
+            float dot = Vector3.Dot(contextVelocity, -raycastHit.normal);
+
+            if (!hitWall||moveInput.z<=0||dot<=0)
                 return false;
             return true;
         }

@@ -20,7 +20,7 @@ namespace CapsuleController
 
         public override void EnterState()
         {
-
+            Debug.Log("Player entered Glide state");
         }
 
         public override void ExitState()
@@ -91,16 +91,7 @@ namespace CapsuleController
             float requiredForce = offset / Time.fixedDeltaTime;
             float force = Mathf.Clamp(requiredForce, -maxAcceleration, maxAcceleration); 
 
-            
             _context.PhysicsBody.AddForce(force * dragFactor * Vector3.up);
-            
-            /*
-            if (offset>0.3f)
-            {
-                float forwardPushForce = Mathf.Clamp(6 * dragFactor * dragFactor * dragFactor * m_glideTimeSeconds, 0, m_maxForwardGlideForce);
-                _context.PhysicsBody.AddForce(_context.transform.forward * forwardPushForce); //Shoddy maths, replace at some point
-            }
-            */
             
         }
 

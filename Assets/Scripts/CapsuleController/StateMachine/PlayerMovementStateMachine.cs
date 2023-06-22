@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting.FullSerializer;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace CapsuleController
@@ -78,6 +73,15 @@ namespace CapsuleController
         [SerializeField] private float m_glideVelocityDecayRate = 0.1f;
         [SerializeField] private float m_glideMinSpeed = 3f;
 
+        [Header("Wallrunning:")]
+        [SerializeField] private float m_wallrunAttachmentDistance = 1.5f;
+        [SerializeField] private float m_wallrunStickDistance = 1f;
+        [SerializeField] private float m_wallrunSlideAcceleration = 2f;
+        [SerializeField] private float m_wallrunMinimumIncline = 60;
+        [SerializeField] private float m_wallrunRunSpeed = 1.5f;
+        [SerializeField] private LayerMask m_wallrunnableLayers;
+
+
         [System.Serializable]
         public class Locomotion
         {
@@ -143,6 +147,13 @@ namespace CapsuleController
 
         public int AirJumpNumber { get => m_airJumps; }
         public int AirJumpCounter { get => m_airJumpCounter; set => m_airJumpCounter = value; }
+
+
+        public float WallrunAttachmentDistance => m_wallrunAttachmentDistance;
+        public float WallrunStickDistance => m_wallrunStickDistance;
+        public float WallrunSlideAccelerationCoefficient => m_wallrunSlideAcceleration;
+        public float WallrunRunSpeed => m_wallrunRunSpeed;
+        public LayerMask WallrunnableLayers => m_wallrunnableLayers;
 
 
         void Awake()

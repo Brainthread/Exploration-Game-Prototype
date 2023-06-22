@@ -10,14 +10,13 @@ namespace CapsuleController
         public PlayerAerialState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
       
         public override void EnterState() {
-            //Debug.Log("Aerial");
+            Debug.Log("Player entered Aerial state");
             if (_context.AirJumpCounter > 0)
             {
                 _context.JumpReady = true;
             }
             m_entryVelocity = _context.PhysicsBody.velocity;
             m_entryHeight = _context.transform.position.y;
-            _context.PhysicsBody.useGravity = true;
 
         }
         public override void UpdateState() {
@@ -58,16 +57,17 @@ namespace CapsuleController
         }
 
         public override void FixedUpdateState(){
-            _context.PhysicsBody.useGravity = true;
             (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
             bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
             bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
-            if (_context.PhysicsBody.velocity.y < 0)
+            if (_context.PhysicsBody.velocity.y <= 0)
             {
+                _context.PhysicsBody.useGravity = false;
                 HandleFall();
             }
             else if (_context.PhysicsBody.velocity.y > 0)
             {
+                _context.PhysicsBody.useGravity = true;
                 HandleAscent();
             }
 
@@ -75,7 +75,6 @@ namespace CapsuleController
             {
                 if (grounded&&onIncline)
                 {
-                    
                     SwitchState(_factory.Grounded());
                     return;
                 }
@@ -86,6 +85,11 @@ namespace CapsuleController
                         HandleFall();
                     }
                 }
+            }
+
+            if(PlayerWallrunState.ShouldBeAttached(_context.MoveInput.normalized, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
+            {
+                SwitchState(_factory.Wallrunning());
             }
 
             Move(rayHit, _context.AerialLocomotion);
@@ -126,5 +130,6 @@ namespace CapsuleController
             _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, _context.GoalVelocity, accel * Time.fixedDeltaTime);
 
         }
+
     }
 }

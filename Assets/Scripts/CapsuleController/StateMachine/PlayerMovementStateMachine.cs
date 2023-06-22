@@ -25,7 +25,8 @@ namespace CapsuleController
         [SerializeField] private float m_rideSpringDamper = 5f;
 
 
-        private Vector3 m_moveInput;
+        private Vector3 m_worldMoveDirection;
+        private Vector3 m_localMoveDirection;
         private bool m_isRunning;
         private float m_speedFactor = 1f;
         private float m_maxAccelForceFactor = 1f;
@@ -39,8 +40,9 @@ namespace CapsuleController
         private bool m_isJumping = false;
 
         private bool m_glideInput = false;
-
         private int m_airJumpCounter = 0;
+
+        private Camera m_mainCamera;
 
         [Header("Grounded State:")]
         [SerializeField] private AnimationCurve m_accelerationFactorFromDot;
@@ -80,6 +82,7 @@ namespace CapsuleController
         [SerializeField] private float m_wallrunMinimumIncline = 60;
         [SerializeField] private float m_wallrunRunSpeed = 1.5f;
         [SerializeField] private LayerMask m_wallrunnableLayers;
+        [SerializeField] private float m_wallrunAttachmentPower = 4f;
 
 
         [System.Serializable]
@@ -95,6 +98,8 @@ namespace CapsuleController
         private PlayerStateFactory m_states;
 
         public PlayerBaseState CurrentState { get => m_currentState; set => m_currentState = value; }
+        public Camera MainCamera => m_mainCamera;
+
 
         public Rigidbody PhysicsBody => m_rigidbody;
         public float LevitateHeight => m_levitateHeight;
@@ -128,8 +133,8 @@ namespace CapsuleController
         public float GlideMovementResetFactor => m_glideMovementResetFactor;
 
 
-
-        public Vector3 MoveInput => m_moveInput;
+        public Vector3 LocalMoveDirection => m_localMoveDirection;
+        public Vector3 WorldMoveDirection => m_worldMoveDirection;
         public bool IsRunning => m_isRunning;
         public float FallGravityFactor => m_fallGravityFactor;
 
@@ -154,6 +159,8 @@ namespace CapsuleController
         public float WallrunSlideAccelerationCoefficient => m_wallrunSlideAcceleration;
         public float WallrunRunSpeed => m_wallrunRunSpeed;
         public LayerMask WallrunnableLayers => m_wallrunnableLayers;
+        public float WallrunAttachmentForce => m_wallrunAttachmentPower;
+
 
 
         void Awake()
@@ -166,6 +173,7 @@ namespace CapsuleController
             m_currentState.EnterState();
             m_timeSinceJumpPressed = Mathf.Max(m_coyoteTime, m_jumpBuffer);
             m_timeSinceJump = Mathf.Max(m_coyoteTime, m_jumpBuffer);
+            m_mainCamera = Camera.main;
         }
 
         void Update()
@@ -177,7 +185,8 @@ namespace CapsuleController
             if(m_timeSinceUngrounded <= m_coyoteTime + 1)
                 m_timeSinceUngrounded += Time.deltaTime;
             m_glideInput = Input.GetButton("Jump");
-            m_moveInput = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
+            m_localMoveDirection = Input.GetAxisRaw("Horizontal") * Vector3.right + Input.GetAxisRaw("Vertical") * Vector3.forward;
+            m_worldMoveDirection = Input.GetAxisRaw("Horizontal") * transform.right + Input.GetAxisRaw("Vertical") * transform.forward;
             m_isRunning = Input.GetButton("Sprint");
             if (Input.GetButtonDown("Jump"))
             {
@@ -201,7 +210,7 @@ namespace CapsuleController
          */
         public void GetMovementInput(Vector3 _movement)
         {
-            m_moveInput = _movement;
+            m_worldMoveDirection = _movement;
         }
 
         public void GetJumpInput(float _timeSinceJumpPressed)

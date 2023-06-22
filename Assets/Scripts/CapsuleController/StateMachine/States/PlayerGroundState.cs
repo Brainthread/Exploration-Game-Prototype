@@ -86,7 +86,7 @@ namespace CapsuleController
 
         private void Move(RaycastHit rayHit, PlayerMovementStateMachine.Locomotion locomotion)
         {
-            Vector3 m_UnitGoal = _context.MoveInput.normalized;
+            Vector3 m_UnitGoal = _context.WorldMoveDirection.normalized;
             float m_projectedVerticalSpeed = Vector3.ProjectOnPlane(m_UnitGoal, rayHit.normal).y;
             m_UnitGoal.y = m_projectedVerticalSpeed;
             m_UnitGoal = m_UnitGoal.normalized;

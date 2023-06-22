@@ -49,7 +49,7 @@ namespace CapsuleController
 
         private void Glide()
         {
-            Vector3 m_UnitGoal = _context.MoveInput.normalized;
+            Vector3 m_UnitGoal = _context.WorldMoveDirection.normalized;
             Vector3 unitVel = _context.GoalVelocity.normalized;
             float velDot = Vector3.Dot(m_UnitGoal, unitVel);
             float accel = _context.GlideMovementAcceleration * _context.AccelerationFactorFromDot.Evaluate(velDot);

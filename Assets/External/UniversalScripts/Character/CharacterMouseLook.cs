@@ -11,6 +11,9 @@ public class CharacterMouseLook : MonoBehaviour
 
     private float rotY = 0.0f; // rotation around the up/y axis
     private float rotX = 0.0f; // rotation around the right/x axis
+    private float rotZ = 0.0f; // rotation around the forward/z axis
+    private float targetRotZ = 0;
+    private float deltaZ = 2;
 
     void Start()
     {
@@ -31,13 +34,14 @@ public class CharacterMouseLook : MonoBehaviour
 
 
         Vector3 bodyRot = transform.localRotation.eulerAngles;
-        Vector3 camRot = myCamera.transform.localRotation.eulerAngles;
+        Vector3 camRot = Vector3.zero;
 
         bodyRot.y = rotY;
         camRot.x = rotX;
 
+        rotZ = Mathf.MoveTowards(rotZ, targetRotZ, deltaZ*Time.deltaTime);
         transform.localRotation = Quaternion.Euler(bodyRot);
-        myCamera.transform.localRotation = Quaternion.Euler(camRot);
+        myCamera.transform.localRotation = Quaternion.identity * Quaternion.Euler(camRot) * Quaternion.Euler(new Vector3(0, 0, rotZ));
     }
 
     public Vector2 GetMouseMovement ()
@@ -45,5 +49,12 @@ public class CharacterMouseLook : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
         return new Vector2(mouseX, mouseY);
+    }
+
+
+    public void DoTilt(float degrees, float delta)
+    {
+        deltaZ = delta;
+        targetRotZ = degrees;
     }
 }

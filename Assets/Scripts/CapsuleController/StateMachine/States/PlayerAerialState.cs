@@ -87,7 +87,7 @@ namespace CapsuleController
                 }
             }
 
-            if(PlayerWallrunState.ShouldBeAttached(_context.MoveInput.normalized, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
+            if(PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
             {
                 SwitchState(_factory.Wallrunning());
             }
@@ -113,7 +113,7 @@ namespace CapsuleController
         private void Move(RaycastHit rayHit, PlayerMovementStateMachine.Locomotion locomotion)
         {
             
-            Vector3 m_UnitGoal = _context.MoveInput.normalized;
+            Vector3 m_UnitGoal = _context.WorldMoveDirection.normalized;
             Vector3 unitVel = _context.GoalVelocity.normalized;
             float velDot = Vector3.Dot(m_UnitGoal, unitVel);
             float accel = locomotion.acceleration * _context.AccelerationFactorFromDot.Evaluate(velDot);

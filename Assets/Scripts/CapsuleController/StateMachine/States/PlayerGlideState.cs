@@ -20,7 +20,6 @@ namespace CapsuleController
 
         public override void EnterState()
         {
-            Debug.Log("Player entered Glide state");
         }
 
         public override void ExitState()

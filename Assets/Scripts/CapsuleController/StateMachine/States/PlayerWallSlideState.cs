@@ -7,13 +7,15 @@ namespace CapsuleController
     {
         public PlayerWallSlideState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
         private Vector3 lastInput = Vector3.zero;
+        bool active;
         public override void EnterState()
         {
+            active = true;
             _context.PhysicsBody.useGravity = false;
             Vector3 velocity = _context.PhysicsBody.velocity;
             velocity.y = 0;
             _context.PhysicsBody.velocity = velocity;
-            Debug.Log("Enter Wallrun");
+            Debug.Log("Enter Wallslide");
             _context.GetComponent<CharacterMouseLook>().DoTilt(0, 120);
         }
         public override void UpdateState()
@@ -22,7 +24,7 @@ namespace CapsuleController
         }
         public override void ExitState()
         {
-            Debug.Log("Exit Wallrun");
+            Debug.Log("Exit Wallslide");
             _context.GetComponent<CharacterMouseLook>().DoTilt(0, 120);
         }
         public override void CheckSwitchStates()
@@ -36,41 +38,38 @@ namespace CapsuleController
 
         public override void FixedUpdateState()
         {
+                (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
 
-            (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
+                bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
+                bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
 
-            bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
-            bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
 
-            if(_context.LocalMoveDirection.x != 0)
-                lastInput = _context.LocalMoveDirection;
-            
-            if(grounded&&onIncline)
-            {
-                SwitchState(_factory.Grounded());
-                return;
-            }
+                if (grounded && onIncline)
+                {
+                    SwitchState(_factory.Grounded());
+                    return;
+                }
 
-            (bool wallWasHit, RaycastHit wallHit) = FindWallslideSurface(lastInput, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers);
+                (bool wallWasHit, RaycastHit wallHit) = FindWallslideSurface(_context.WorldMoveDirection, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers);
 
-            if (!wallWasHit)
-            {
-                SwitchState(_factory.Aerial());
-                return;
-            }
-            if(_context.LocalMoveDirection.z >= 0)
-            {
-                SwitchState(_factory.Wallrunning());
-                return;
-            }
-            AttachToWall(wallHit, _context.LocalMoveDirection);
-            Slide();
-            if (_context.TimeSinceJumpPressed < _context.JumpBuffer && _context.WalljumpCounter>0)
-            {
-                Jump(wallHit.normal);
-                _context.WalljumpCounter--;
-            }
-                
+                if (!wallWasHit)
+                {
+                    SwitchState(_factory.Aerial());
+                    return;
+                }
+                if (_context.LocalMoveDirection.z > 0 && PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
+                {
+                    SwitchState(_factory.Wallrunning());
+                    return;
+                }
+                AttachToWall(wallHit, _context.LocalMoveDirection);
+                Slide();
+                DampenMovement();
+                if (_context.TimeSinceJumpPressed < _context.JumpBuffer && _context.WalljumpCounter > 0)
+                {
+                    Jump(wallHit.normal);
+                    _context.WalljumpCounter--;
+                }
         }
 
         private void AttachToWall(RaycastHit hit, Vector3 moveDirection)
@@ -81,20 +80,33 @@ namespace CapsuleController
             _context.PhysicsBody.AddForce(force);
         }
 
+        private void DampenMovement()
+        {
+            Vector3 speed = _context.PhysicsBody.velocity;
+            float tempY = speed.y;
+            speed.y = 0;
+            speed = Vector3.MoveTowards(speed, Vector3.zero, 25 * Time.fixedDeltaTime);
+            speed.y = tempY;
+            _context.PhysicsBody.velocity = speed;
+        }
+
         private void Slide()
         {
-            float currentYVelocity = _context.PhysicsBody.velocity.y;
             _context.PhysicsBody.AddForce((_context.GravitationalForce * (_context.WallrunSlideAccelerationCoefficient*_context.WallrunSlipCoefficient)));
         }
 
         private void Jump(Vector3 normal)
         {
+            Vector3 velocity = _context.PhysicsBody.velocity;
+            velocity.y = 0;
+            _context.PhysicsBody.velocity = velocity;
+
             normal.y = 0; 
             _context.JumpReady = false;
             _context.ShouldMaintainHeight = false;
             _context.IsJumping = true;
-            Vector3 jumpVector = new Vector3() + normal.normalized * _context.WalljumpSideForce;
-            jumpVector += Vector3.up * _context.WalljumpUpForce;
+            Vector3 jumpVector = new Vector3() + normal.normalized * _context.WallslideJumpSideForce;
+            jumpVector += Vector3.up * _context.WallslideJumpUpForce;
 
             _context.PhysicsBody.AddForce(jumpVector, ForceMode.VelocityChange);
 
@@ -102,6 +114,8 @@ namespace CapsuleController
             _context.TimeSinceJump = 0f;
             _context.TimeSinceUngrounded = _context.CoyoteTime;
             _context.GoalVelocity = jumpVector;
+            SwitchState(_factory.Aerial());
+            _context.TimeSinceWallJump = 0;
         }
 
 
@@ -113,11 +127,11 @@ namespace CapsuleController
             return true;
         }
 
-        public static (bool, RaycastHit) FindWallslideSurface(Vector3 moveInput, Vector3 position, Vector3 contextRight, float attachmentDistance, LayerMask layers)
+        public static (bool, RaycastHit) FindWallslideSurface(Vector3 worldMoveDirection, Vector3 position, Vector3 contextRight, float attachmentDistance, LayerMask layers)
         {
             RaycastHit hit = new RaycastHit();
             bool didHit = false;
-            Vector3 raycastDirection = (moveInput.x * contextRight).normalized;
+            Vector3 raycastDirection = worldMoveDirection.normalized;
             Vector3 raycastPosition = position;
             if (raycastDirection != Vector3.zero)
             {

@@ -88,13 +88,17 @@ namespace CapsuleController
         [SerializeField] private float m_wallrunSlipCoefficientDelta = 0.3f;
         [SerializeField] private float m_wallrunMinSlipCoefficient = 0f;
         private float m_wallrunSlipCoefficient = 0f;
+        [SerializeField] private float m_wallrunJumpSideForce = 10;
+        [SerializeField] private float m_wallrunJumpUpForce = 10;
 
+        [Header("Wall sliding:")]
+        [SerializeField] private float m_wallslideJumpSideForce = 10;
+        [SerializeField] private float m_wallslideJumpUpForce = 10;
 
         [Header("Walljumping:")]
-        [SerializeField] private float m_walljumpSideForce = 10;
-        [SerializeField] private float m_walljumpUpForce = 10;
         [SerializeField] private int m_maxWalljumps = 10;
         private int m_walljumpCounter = 10;
+        private float m_timeSinceLastWalljump;
 
 
         [System.Serializable]
@@ -178,11 +182,16 @@ namespace CapsuleController
         public float WallrunMinSlipCoefficient => m_wallrunMinSlipCoefficient;
         public float WallrunSlipCoefficientDelta => m_wallrunSlipCoefficientDelta;
 
-        public float WalljumpSideForce => m_walljumpSideForce;
-        public float WalljumpUpForce => m_walljumpUpForce;
+        public float WallRunJumpSideForce => m_wallrunJumpSideForce;
+        public float WallrunJumpUpForce => m_wallrunJumpUpForce;
+
+        public float WallslideJumpSideForce => m_wallslideJumpSideForce;
+        public float WallslideJumpUpForce => m_wallslideJumpUpForce;
+
         public int MaxWalljumps => m_maxWalljumps;
         public int WalljumpCounter { get => m_walljumpCounter; set => m_walljumpCounter = value; }
 
+        public float TimeSinceWallJump { get => m_timeSinceLastWalljump; set => m_timeSinceLastWalljump = value; }
 
 
         void Awake()
@@ -202,6 +211,8 @@ namespace CapsuleController
 
         void Update()
         {
+            if (m_timeSinceLastWalljump < 10000)
+                m_timeSinceLastWalljump += Time.deltaTime;
             if (m_timeSinceJumpPressed <= m_coyoteTime + 1)
                 m_timeSinceJumpPressed += Time.deltaTime;
             if (m_timeSinceJump <= m_coyoteTime + 1)

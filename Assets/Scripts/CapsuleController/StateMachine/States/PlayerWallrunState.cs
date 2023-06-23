@@ -59,7 +59,8 @@ namespace CapsuleController
             }
             if(_context.LocalMoveDirection.z <= 0)
             {
-
+                SwitchState(_factory.WallSliding());
+                return;
             }
 
             PlayerMovementStateMachine.Locomotion locomotion = _context.IsRunning ? _context.RunLocomotion : _context.WalkLocomotion;
@@ -117,12 +118,16 @@ namespace CapsuleController
 
         private void Jump(Vector3 normal)
         {
+            Vector3 velocity = _context.PhysicsBody.velocity;
+            velocity.y = 0;
+            _context.PhysicsBody.velocity = velocity;
+
             normal.y = 0; 
             _context.JumpReady = false;
             _context.ShouldMaintainHeight = false;
             _context.IsJumping = true;
-            Vector3 jumpVector = new Vector3() + normal.normalized * _context.WalljumpSideForce;
-            jumpVector += Vector3.up * _context.WalljumpUpForce;
+            Vector3 jumpVector = new Vector3() + normal.normalized * _context.WallRunJumpSideForce;
+            jumpVector += Vector3.up * _context.WallrunJumpUpForce;
 
             _context.PhysicsBody.AddForce(jumpVector, ForceMode.VelocityChange);
 

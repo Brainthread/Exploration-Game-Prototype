@@ -42,7 +42,6 @@ namespace CapsuleController
         {
             if (triggerFlag)
             {
-                Debug.Log(_context.PhysicsBody.velocity);
                 triggerFlag = false;
                 if (_context.JumpReady)
                 {

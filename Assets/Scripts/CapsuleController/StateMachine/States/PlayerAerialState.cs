@@ -14,7 +14,6 @@ namespace CapsuleController
         public PlayerAerialState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
       
         public override void EnterState() {
-            Debug.Log("Player entered Aerial state");
             if (_context.AirJumpCounter > 0)
             {
                 _context.JumpReady = true;
@@ -23,6 +22,7 @@ namespace CapsuleController
             m_entryHeight = _context.transform.position.y;
             m_influence = m_minInfluence;
         }
+
         public override void UpdateState() {
             (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
             bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
@@ -94,11 +94,18 @@ namespace CapsuleController
                     }
                 }
             }
-
-            if(PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
+            if (_context.TimeSinceWallJump > 0.5f)
             {
-                SwitchState(_factory.Wallrunning());
-                return;
+                if (PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
+                {
+                    SwitchState(_factory.Wallrunning());
+                    return;
+                }
+                if (PlayerWallSlideState.ShouldBeAttached(_context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
+                {
+                    SwitchState(_factory.WallSliding());
+                    return;
+                }
             }
 
             if(_context.LocalMoveDirection != Vector3.zero)

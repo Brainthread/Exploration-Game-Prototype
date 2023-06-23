@@ -4578,8 +4578,10 @@ MonoBehaviour:
   m_wallrunMaxSlipCoefficient: 3
   m_wallrunSlipCoefficientDelta: 0.2
   m_wallrunMinSlipCoefficient: 1
-  m_walljumpSideForce: 16
-  m_walljumpUpForce: 12
+  m_wallrunJumpSideForce: 12
+  m_wallrunJumpUpForce: 8
+  m_wallslideJumpSideForce: 6
+  m_wallslideJumpUpForce: 10
   m_maxWalljumps: 2147483647
 --- !u!114 &1879394346
 MonoBehaviour:

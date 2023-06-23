@@ -16,6 +16,8 @@ namespace CapsuleController
             if (ShouldJump() && grounded && onIncline)
                 SwitchState(_factory.Jump());
             _context.PhysicsBody.useGravity = false;
+            _context.WalljumpCounter = _context.MaxWalljumps;
+            _context.WallrunSlipCoefficient = _context.WallrunMinSlipCoefficient;
         }
 
         public override void UpdateState() {

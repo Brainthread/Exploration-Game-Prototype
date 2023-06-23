@@ -8,9 +8,9 @@ namespace CapsuleController
         private Vector3 m_entryVelocity;
         private float m_entryHeight;
         private float m_influence = 1;
-        private float m_influenceGrowth = 1f;
-        private float m_minInfluence = 0.1f;
-        private float m_maxInfluence = 1;
+        private float m_influenceGrowth = 1.2f;
+        private float m_minInfluence = 0f;
+        private float m_maxInfluence = 1f;
         public PlayerAerialState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
       
         public override void EnterState() {
@@ -47,6 +47,7 @@ namespace CapsuleController
             if(_context.PhysicsBody.velocity.y<0&&_context.GlideInput)
             {
                 SwitchState(_factory.Glide());
+                return;
             }
             if(m_influence < m_maxInfluence)
             {
@@ -97,6 +98,7 @@ namespace CapsuleController
             if(PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
             {
                 SwitchState(_factory.Wallrunning());
+                return;
             }
 
             if(_context.LocalMoveDirection != Vector3.zero)

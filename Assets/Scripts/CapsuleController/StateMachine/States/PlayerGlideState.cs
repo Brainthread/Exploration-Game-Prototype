@@ -43,6 +43,11 @@ namespace CapsuleController
             {
                 SwitchState(_factory.Aerial());
             }
+            if (PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
+            {
+                SwitchState(_factory.Wallrunning());
+                return;
+            }
             MaintainVerticalVelocity();
             Glide();
         }

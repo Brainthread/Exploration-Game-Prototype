@@ -11,6 +11,7 @@ namespace CapsuleController
         private PlayerJumpState m_jumpState;
         private PlayerGlideState m_glideState;
         private PlayerWallrunState m_wallrunState;
+        private PlayerWallSlideState m_wallSlideState;
         public PlayerStateFactory(PlayerMovementStateMachine context)
         {
             m_context = context;
@@ -19,6 +20,7 @@ namespace CapsuleController
             m_jumpState = new PlayerJumpState(m_context, this);
             m_glideState = new PlayerGlideState(m_context, this);
             m_wallrunState = new PlayerWallrunState(m_context, this);
+            m_wallSlideState = new PlayerWallSlideState(m_context, this);
         }
         public PlayerBaseState Grounded()
         {
@@ -39,6 +41,10 @@ namespace CapsuleController
         public PlayerWallrunState Wallrunning()
         {
             return m_wallrunState;
+        }
+        public PlayerWallSlideState WallSliding()
+        {
+            return m_wallSlideState;
         }
     }
 }

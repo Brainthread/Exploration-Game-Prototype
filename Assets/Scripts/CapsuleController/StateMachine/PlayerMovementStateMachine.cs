@@ -84,12 +84,17 @@ namespace CapsuleController
         [SerializeField] private LayerMask m_wallrunnableLayers;
         [SerializeField] private float m_wallrunAttachmentForce = 4f;
         [SerializeField] private float m_wallrunCameraTilt = 10f;
-
+        [SerializeField] private float m_wallrunMaxSlipCoefficient = 1f;
+        [SerializeField] private float m_wallrunSlipCoefficientDelta = 0.3f;
+        [SerializeField] private float m_wallrunMinSlipCoefficient = 0f;
+        private float m_wallrunSlipCoefficient = 0f;
 
 
         [Header("Walljumping:")]
         [SerializeField] private float m_walljumpSideForce = 10;
         [SerializeField] private float m_walljumpUpForce = 10;
+        [SerializeField] private int m_maxWalljumps = 10;
+        private int m_walljumpCounter = 10;
 
 
         [System.Serializable]
@@ -168,15 +173,21 @@ namespace CapsuleController
         public LayerMask WallrunnableLayers => m_wallrunnableLayers;
         public float WallrunAttachmentForce => m_wallrunAttachmentForce;
         public float WallrunCameraTilt => m_wallrunCameraTilt;
-
+        public float WallrunSlipCoefficient { get => m_wallrunSlipCoefficient; set => m_wallrunSlipCoefficient = value; }
+        public float WallrunMaxSlipCoefficent => m_wallrunMaxSlipCoefficient;
+        public float WallrunMinSlipCoefficient => m_wallrunMinSlipCoefficient;
+        public float WallrunSlipCoefficientDelta => m_wallrunSlipCoefficientDelta;
 
         public float WalljumpSideForce => m_walljumpSideForce;
         public float WalljumpUpForce => m_walljumpUpForce;
+        public int MaxWalljumps => m_maxWalljumps;
+        public int WalljumpCounter { get => m_walljumpCounter; set => m_walljumpCounter = value; }
 
 
 
         void Awake()
         {
+            WalljumpCounter = MaxWalljumps;
             m_airJumpCounter = 0;
             m_rigidbody = GetComponent<Rigidbody>();
             m_gravitationalForce = Physics.gravity * m_rigidbody.mass;
@@ -186,6 +197,7 @@ namespace CapsuleController
             m_timeSinceJumpPressed = Mathf.Max(m_coyoteTime, m_jumpBuffer);
             m_timeSinceJump = Mathf.Max(m_coyoteTime, m_jumpBuffer);
             m_mainCamera = Camera.main;
+            m_wallrunSlipCoefficient = WallrunMinSlipCoefficient;
         }
 
         void Update()

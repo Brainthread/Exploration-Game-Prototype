@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace CapsuleController
 {
-    public class PlayerWallrunState : PlayerBaseState
+    public class PlayerWallSlideState : PlayerBaseState
     {
-        public PlayerWallrunState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
+        public PlayerWallSlideState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
         private Vector3 lastInput = Vector3.zero;
         public override void EnterState()
         {
@@ -14,6 +14,7 @@ namespace CapsuleController
             velocity.y = 0;
             _context.PhysicsBody.velocity = velocity;
             Debug.Log("Enter Wallrun");
+            _context.GetComponent<CharacterMouseLook>().DoTilt(0, 120);
         }
         public override void UpdateState()
         {
@@ -50,21 +51,18 @@ namespace CapsuleController
                 return;
             }
 
-            (bool wallWasHit, RaycastHit wallHit) = FindWallrunSurface(lastInput, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers);
+            (bool wallWasHit, RaycastHit wallHit) = FindWallslideSurface(lastInput, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers);
 
             if (!wallWasHit)
             {
                 SwitchState(_factory.Aerial());
                 return;
             }
-            if(_context.LocalMoveDirection.z <= 0)
+            if(_context.LocalMoveDirection.z >= 0)
             {
-
+                SwitchState(_factory.Wallrunning());
+                return;
             }
-
-            PlayerMovementStateMachine.Locomotion locomotion = _context.IsRunning ? _context.RunLocomotion : _context.WalkLocomotion;
-            Move(locomotion, wallHit.normal);
-            _context.GetComponent<CharacterMouseLook>().DoTilt(10 * Mathf.Sign(lastInput.x), 120);
             AttachToWall(wallHit, _context.LocalMoveDirection);
             Slide();
             if (_context.TimeSinceJumpPressed < _context.JumpBuffer && _context.WalljumpCounter>0)
@@ -73,32 +71,6 @@ namespace CapsuleController
                 _context.WalljumpCounter--;
             }
                 
-        }
-
-        private void Move(PlayerMovementStateMachine.Locomotion locomotion, Vector3 normal)
-        {
-
-            Vector3 m_UnitGoal = _context.WorldMoveDirection.normalized;
-            Vector3 movementVector = Vector3.Cross(Vector3.up, normal);
-            m_UnitGoal = Vector3.Project(m_UnitGoal, movementVector).normalized;
-            if(Vector3.Dot(_context.transform.forward, m_UnitGoal) <= 0)
-            {
-                m_UnitGoal -= 2*Vector3.Project(m_UnitGoal, _context.transform.forward).normalized;
-            }
-            Vector3 unitVel = _context.GoalVelocity.normalized;
-            float velDot = Vector3.Dot(m_UnitGoal, unitVel);
-            float accel = locomotion.acceleration * _context.AccelerationFactorFromDot.Evaluate(velDot) * 5;
-            Vector3 goalVel = m_UnitGoal * Mathf.Clamp(Vector3.ProjectOnPlane(_context.PhysicsBody.velocity, Vector3.up).magnitude, locomotion.maxSpeed, 10000) * _context.SpeedFactor;
-
-            _context.GoalVelocity = Vector3.MoveTowards(_context.GoalVelocity,
-                                            goalVel,
-                                            accel * Time.fixedDeltaTime);
-
-            Vector3 tempGoal = _context.GoalVelocity + -normal*1;
-            tempGoal.y = _context.PhysicsBody.velocity.y;
-            _context.GoalVelocity = tempGoal;
-
-            _context.PhysicsBody.velocity = Vector3.MoveTowards(_context.PhysicsBody.velocity, _context.GoalVelocity, accel * Time.fixedDeltaTime);
         }
 
         private void AttachToWall(RaycastHit hit, Vector3 moveDirection)
@@ -133,19 +105,15 @@ namespace CapsuleController
         }
 
 
-        public static bool ShouldBeAttached(Vector3 moveInput, Vector3 position, PlayerMovementStateMachine context, float attachmentDistance, LayerMask layers)
+        public static bool ShouldBeAttached(PlayerMovementStateMachine context, float attachmentDistance, LayerMask layers)
         {
-            (bool hitWall, RaycastHit raycastHit) = FindWallrunSurface(moveInput, position, context.transform.right, attachmentDistance, layers);
-            
-            Vector3 contextVelocity = context.PhysicsBody.velocity;
-            float dot = Vector3.Dot(contextVelocity, -raycastHit.normal);
-
-            if (!hitWall||moveInput.z<=0||dot<=0)
+            (bool hitWall, RaycastHit raycastHit) = FindWallslideSurface(context.WorldMoveDirection, context.transform.position, context.transform.right, attachmentDistance, layers);
+            if (!hitWall)
                 return false;
             return true;
         }
 
-        public static (bool, RaycastHit) FindWallrunSurface(Vector3 moveInput, Vector3 position, Vector3 contextRight, float attachmentDistance, LayerMask layers)
+        public static (bool, RaycastHit) FindWallslideSurface(Vector3 moveInput, Vector3 position, Vector3 contextRight, float attachmentDistance, LayerMask layers)
         {
             RaycastHit hit = new RaycastHit();
             bool didHit = false;

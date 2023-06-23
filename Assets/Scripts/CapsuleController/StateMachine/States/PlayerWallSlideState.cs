@@ -57,7 +57,7 @@ namespace CapsuleController
                     SwitchState(_factory.Aerial());
                     return;
                 }
-                if (_context.LocalMoveDirection.z > 0 && PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
+                if (_context.LocalMoveDirection.z > 0 && PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers)&&_context.TimeSinceWallJump > 0.3f)
                 {
                     SwitchState(_factory.Wallrunning());
                     return;

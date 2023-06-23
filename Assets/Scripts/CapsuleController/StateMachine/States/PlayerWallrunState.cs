@@ -57,7 +57,7 @@ namespace CapsuleController
                 SwitchState(_factory.Aerial());
                 return;
             }
-            if(_context.LocalMoveDirection.z <= 0)
+            if(_context.LocalMoveDirection.z <= 0 && _context.TimeSinceWallJump > 0.3f)
             {
                 SwitchState(_factory.WallSliding());
                 return;
@@ -135,6 +135,7 @@ namespace CapsuleController
             _context.TimeSinceJump = 0f;
             _context.TimeSinceUngrounded = _context.CoyoteTime;
             _context.GoalVelocity = jumpVector;
+            _context.TimeSinceWallJump = 0;
         }
 
 

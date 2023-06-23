@@ -94,7 +94,7 @@ namespace CapsuleController
                     }
                 }
             }
-            if (_context.TimeSinceWallJump > 0.5f)
+            if (_context.TimeSinceWallJump > 0.3f)
             {
                 if (PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers))
                 {

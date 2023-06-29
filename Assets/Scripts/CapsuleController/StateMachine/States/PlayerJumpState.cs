@@ -9,6 +9,7 @@ namespace CapsuleController
         private bool triggerFlag = false;
         public override void EnterState()
         {
+            _context.TimeSinceWallJump = 0;
             (bool hitGround, RaycastHit rayHit) = _context.RaycastToGround();
             if (_context.JumpReady)
             {

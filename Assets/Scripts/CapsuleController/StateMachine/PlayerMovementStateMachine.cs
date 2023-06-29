@@ -99,7 +99,8 @@ namespace CapsuleController
         [SerializeField] private int m_maxWalljumps = 10;
         private int m_walljumpCounter = 10;
         private float m_timeSinceLastWalljump;
-        [SerializeField] private float m_walljumpPowerDecreaseRatio = 0.9f;
+        [SerializeField] private int m_freeWalljumps = 4;
+
 
 
         [System.Serializable]
@@ -194,7 +195,7 @@ namespace CapsuleController
 
         public float TimeSinceWallJump { get => m_timeSinceLastWalljump; set => m_timeSinceLastWalljump = value; }
 
-        public float WalljumpPowerDecreaseRatio => m_walljumpPowerDecreaseRatio;
+        public int FreeWallJumps => m_freeWalljumps;
 
 
         void Awake()

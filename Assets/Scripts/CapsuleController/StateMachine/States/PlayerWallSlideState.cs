@@ -38,38 +38,38 @@ namespace CapsuleController
 
         public override void FixedUpdateState()
         {
-                (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
+            (bool rayHitGround, RaycastHit rayHit) = _context.RaycastToGround();
 
-                bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
-                bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
+            bool grounded = _context.CheckIfGrounded(rayHitGround, rayHit);
+            bool onIncline = _context.LegalIncline(rayHitGround, rayHit);
 
 
-                if (grounded && onIncline)
-                {
-                    SwitchState(_factory.Grounded());
-                    return;
-                }
+            if (grounded && onIncline)
+            {
+                SwitchState(_factory.Grounded());
+                return;
+            }
 
-                (bool wallWasHit, RaycastHit wallHit) = FindWallslideSurface(_context.WorldMoveDirection, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers);
+            (bool wallWasHit, RaycastHit wallHit) = FindWallslideSurface(_context.WorldMoveDirection, _context.transform.position, _context.transform.right, _context.WallrunAttachmentDistance, _context.WallrunnableLayers);
 
-                if (!wallWasHit)
-                {
-                    SwitchState(_factory.Aerial());
-                    return;
-                }
-                if (_context.LocalMoveDirection.z > 0 && PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers)&&_context.TimeSinceWallJump > 0.3f)
-                {
-                    SwitchState(_factory.Wallrunning());
-                    return;
-                }
-                AttachToWall(wallHit, _context.LocalMoveDirection);
-                Slide();
-                DampenMovement();
-                if (_context.TimeSinceJumpPressed < _context.JumpBuffer && _context.WalljumpCounter > 0)
-                {
-                    Jump(wallHit.normal);
-                    _context.WalljumpCounter--;
-                }
+            if (!wallWasHit)
+            {
+                SwitchState(_factory.Aerial());
+                return;
+            }
+            if (_context.LocalMoveDirection.z > 0 && PlayerWallrunState.ShouldBeAttached(_context.LocalMoveDirection, _context.transform.position, _context, _context.WallrunAttachmentDistance, _context.WallrunnableLayers) && _context.TimeSinceWallJump > 0.3f)
+            {
+                SwitchState(_factory.Wallrunning());
+                return;
+            }
+            AttachToWall(wallHit, _context.LocalMoveDirection);
+            Slide();
+            DampenMovement();
+            if (_context.TimeSinceJumpPressed < _context.JumpBuffer)
+            {
+                Jump(wallHit.normal);
+                _context.WalljumpCounter = Mathf.Max(0, _context.WalljumpCounter - 1);
+            }
         }
 
         private void AttachToWall(RaycastHit hit, Vector3 moveDirection)
@@ -92,7 +92,7 @@ namespace CapsuleController
 
         private void Slide()
         {
-            _context.PhysicsBody.AddForce((_context.GravitationalForce * (_context.WallrunSlideAccelerationCoefficient*_context.WallrunSlipCoefficient)));
+            _context.PhysicsBody.AddForce((_context.GravitationalForce * (_context.WallrunSlideAccelerationCoefficient * _context.WallrunSlipCoefficient)));
         }
 
         private void Jump(Vector3 normal)
@@ -101,12 +101,13 @@ namespace CapsuleController
             velocity.y = 0;
             _context.PhysicsBody.velocity = velocity;
 
-            normal.y = 0; 
+            normal.y = 0;
             _context.JumpReady = false;
             _context.ShouldMaintainHeight = false;
             _context.IsJumping = true;
             Vector3 jumpVector = new Vector3() + normal.normalized * _context.WallslideJumpSideForce;
-            jumpVector += Vector3.up * _context.WallslideJumpUpForce;
+            float walljumpHeightFactor = Mathf.Min(1, (float)_context.WalljumpCounter/_context.MaxWalljumps);
+            jumpVector += Vector3.up * _context.WallrunJumpUpForce * walljumpHeightFactor;
 
             _context.PhysicsBody.AddForce(jumpVector, ForceMode.VelocityChange);
 

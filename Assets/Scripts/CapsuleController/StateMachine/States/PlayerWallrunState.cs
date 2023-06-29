@@ -68,10 +68,10 @@ namespace CapsuleController
             _context.GetComponent<CharacterMouseLook>().DoTilt(10 * Mathf.Sign(lastInput.x), 120);
             AttachToWall(wallHit, _context.LocalMoveDirection);
             Slide();
-            if (_context.TimeSinceJumpPressed < _context.JumpBuffer && _context.WalljumpCounter>0)
+            if (_context.TimeSinceJumpPressed < _context.JumpBuffer)
             {
                 Jump(wallHit.normal);
-                _context.WalljumpCounter--;
+                _context.WalljumpCounter = Mathf.Max(0, _context.WalljumpCounter - 1);
             }
                 
         }
@@ -127,7 +127,10 @@ namespace CapsuleController
             _context.ShouldMaintainHeight = false;
             _context.IsJumping = true;
             Vector3 jumpVector = new Vector3() + normal.normalized * _context.WallRunJumpSideForce;
-            jumpVector += Vector3.up * _context.WallrunJumpUpForce;
+            float walljumpHeightFactor = Mathf.Min(1, (float)_context.WalljumpCounter / _context.MaxWalljumps);
+            jumpVector += Vector3.up * _context.WallrunJumpUpForce * walljumpHeightFactor;
+
+            Debug.Log((float)((float)_context.WalljumpCounter / (float)_context.MaxWalljumps));
 
             _context.PhysicsBody.AddForce(jumpVector, ForceMode.VelocityChange);
 

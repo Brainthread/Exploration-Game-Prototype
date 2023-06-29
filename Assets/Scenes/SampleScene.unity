@@ -4679,7 +4679,8 @@ MonoBehaviour:
   m_wallrunJumpUpForce: 8
   m_wallslideJumpSideForce: 6
   m_wallslideJumpUpForce: 10
-  m_maxWalljumps: 2147483647
+  m_maxWalljumps: 5
+  m_freeWalljumps: 4
 --- !u!114 &1879394346
 MonoBehaviour:
   m_ObjectHideFlags: 0

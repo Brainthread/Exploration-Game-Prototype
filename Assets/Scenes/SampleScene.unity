@@ -4664,7 +4664,7 @@ MonoBehaviour:
   m_glideMinSpeed: 1
   m_wallrunAttachmentDistance: 0.8
   m_wallrunStickDistance: 0.8
-  m_wallrunSlideAcceleration: 0.2
+  m_wallrunSlideAcceleration: 0.1
   m_wallrunMinimumIncline: 60
   m_wallrunRunSpeed: 1.5
   m_wallrunnableLayers:
@@ -4673,14 +4673,14 @@ MonoBehaviour:
   m_wallrunAttachmentForce: 12
   m_wallrunCameraTilt: 12
   m_wallrunMaxSlipCoefficient: 3
-  m_wallrunSlipCoefficientDelta: 0.2
+  m_wallrunSlipCoefficientDelta: 0.1
   m_wallrunMinSlipCoefficient: 1
   m_wallrunJumpSideForce: 12
   m_wallrunJumpUpForce: 8
   m_wallslideJumpSideForce: 6
   m_wallslideJumpUpForce: 10
   m_maxWalljumps: 5
-  m_freeWalljumps: 4
+  m_freeWalljumps: 7
 --- !u!114 &1879394346
 MonoBehaviour:
   m_ObjectHideFlags: 0

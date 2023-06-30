@@ -99,7 +99,7 @@ namespace CapsuleController
         {
             Vector3 velocity = _context.PhysicsBody.velocity;
             velocity.y = 0;
-            _context.PhysicsBody.velocity = velocity;
+            _context.PhysicsBody.velocity = Vector3.zero;
 
             normal.y = 0;
             _context.JumpReady = false;
@@ -107,6 +107,7 @@ namespace CapsuleController
             _context.IsJumping = true;
             Vector3 jumpVector = new Vector3() + normal.normalized * _context.WallslideJumpSideForce;
             float walljumpHeightFactor = Mathf.Min(1, (float)_context.WalljumpCounter/_context.MaxWalljumps);
+            Debug.Log(walljumpHeightFactor);
             jumpVector += Vector3.up * _context.WallrunJumpUpForce * walljumpHeightFactor;
 
             _context.PhysicsBody.AddForce(jumpVector, ForceMode.VelocityChange);

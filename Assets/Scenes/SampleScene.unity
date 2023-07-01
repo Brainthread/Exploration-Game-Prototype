@@ -4670,7 +4670,7 @@ MonoBehaviour:
   m_wallrunnableLayers:
     serializedVersion: 2
     m_Bits: 1
-  m_wallrunAttachmentForce: 12
+  m_wallrunAttachmentForce: 0
   m_wallrunCameraTilt: 12
   m_wallrunMaxSlipCoefficient: 3
   m_wallrunSlipCoefficientDelta: 0.1
@@ -4680,7 +4680,7 @@ MonoBehaviour:
   m_wallslideJumpSideForce: 6
   m_wallslideJumpUpForce: 10
   m_maxWalljumps: 5
-  m_freeWalljumps: 7
+  m_freeWalljumps: 444
 --- !u!114 &1879394346
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,7 +13,6 @@ namespace CapsuleController
             Vector3 velocity = _context.PhysicsBody.velocity;
             velocity.y = 0;
             _context.PhysicsBody.velocity = velocity;
-            Debug.Log("Enter Wallrun");
         }
         public override void UpdateState()
         {
@@ -21,7 +20,6 @@ namespace CapsuleController
         }
         public override void ExitState()
         {
-            Debug.Log("Exit Wallrun");
             _context.GetComponent<CharacterMouseLook>().DoTilt(0, 120);
         }
         public override void CheckSwitchStates()
@@ -128,17 +126,17 @@ namespace CapsuleController
             _context.IsJumping = true;
             Vector3 jumpVector = new Vector3() + normal.normalized * _context.WallRunJumpSideForce;
             float walljumpHeightFactor = Mathf.Min(1, (float)_context.WalljumpCounter / _context.MaxWalljumps);
-            Debug.Log(walljumpHeightFactor);
             jumpVector += Vector3.up * _context.WallrunJumpUpForce * walljumpHeightFactor;
-
-            Debug.Log((float)((float)_context.WalljumpCounter / (float)_context.MaxWalljumps));
+            Debug.Log(new Vector2(jumpVector.x, jumpVector.z) + ": r");
 
             _context.PhysicsBody.AddForce(jumpVector, ForceMode.VelocityChange);
+            _context.GoalVelocity = jumpVector + Vector3.Project(velocity, _context.transform.forward);
 
             _context.TimeSinceJumpPressed = _context.JumpBuffer;
             _context.TimeSinceJump = 0f;
             _context.TimeSinceUngrounded = _context.CoyoteTime;
-            _context.GoalVelocity = jumpVector;
+
+            SwitchState(_factory.Aerial());
             _context.TimeSinceWallJump = 0;
         }
 
@@ -150,7 +148,7 @@ namespace CapsuleController
             Vector3 contextVelocity = context.PhysicsBody.velocity;
             float dot = Vector3.Dot(contextVelocity, -raycastHit.normal);
 
-            if (!hitWall||moveInput.z<=0||dot<=0)
+            if (!hitWall||moveInput.z<=0)
                 return false;
             return true;
         }

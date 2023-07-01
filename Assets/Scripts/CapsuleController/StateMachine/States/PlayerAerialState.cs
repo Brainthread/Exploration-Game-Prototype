@@ -31,7 +31,6 @@ namespace CapsuleController
             {
                 if (_context.TimeSinceUngrounded < _context.CoyoteTime)
                 {
-                    Debug.Log("CoyoteJump! " + _context.CoyoteTime + " " + _context.TimeSinceJumpPressed + (_context.TimeSinceJumpPressed < _context.CoyoteTime));
                     SwitchState(_factory.Jump());
                 }
                 else if (_context.AirJumpCounter > 0)
@@ -44,7 +43,7 @@ namespace CapsuleController
                     SwitchState(_factory.Glide());
                 }
             }
-            if(_context.PhysicsBody.velocity.y<0&&_context.GlideInput)
+            if(_context.PhysicsBody.velocity.y<0&&_context.GlideInput && false == true)
             {
                 SwitchState(_factory.Glide());
                 return;
@@ -108,8 +107,7 @@ namespace CapsuleController
                 }
             }
 
-            if(_context.LocalMoveDirection != Vector3.zero)
-                Move(rayHit, _context.AerialLocomotion);
+            Move(rayHit, _context.AerialLocomotion);
         }
 
         private void HandleFall()

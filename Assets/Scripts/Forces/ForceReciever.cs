@@ -2,8 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public abstract class ForceReciever : MonoBehaviour
 {
+    public enum ForceType
+    {
+        PointForce,
+        AreaForce
+    }
     [SerializeField] protected Rigidbody m_rigidbody;
     public Rigidbody Rigidbody { get { return m_rigidbody; } }
 

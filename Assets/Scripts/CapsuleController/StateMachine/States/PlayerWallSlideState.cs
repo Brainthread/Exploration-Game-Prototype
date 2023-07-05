@@ -97,7 +97,8 @@ namespace CapsuleController
         {
             Vector3 velocity = _context.PhysicsBody.velocity;
             velocity.y = 0;
-            _context.PhysicsBody.velocity = Vector3.zero;
+            Vector3 fwdSpeed = Vector3.Project(_context.PhysicsBody.velocity, Vector3.Cross(Vector3.up, normal));
+            _context.PhysicsBody.velocity = fwdSpeed;
 
             normal.y = 0;
             _context.JumpReady = false;
@@ -109,7 +110,7 @@ namespace CapsuleController
             Debug.Log(new Vector2(jumpVector.x, jumpVector.z) + ": s");
             _context.PhysicsBody.AddForce(jumpVector, ForceMode.VelocityChange);
 
-            _context.GoalVelocity = _context.PhysicsBody.velocity;
+            _context.GoalVelocity = jumpVector + fwdSpeed;
 
             _context.TimeSinceJumpPressed = _context.JumpBuffer;
             _context.TimeSinceJump = 0f;

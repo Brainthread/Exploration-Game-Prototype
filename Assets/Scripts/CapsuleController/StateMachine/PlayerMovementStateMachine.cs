@@ -5,7 +5,7 @@ namespace CapsuleController
     public class PlayerMovementStateMachine : MonoBehaviour
     {
         [Header("Common variables")]
-        [SerializeField] private bool m_allowControl = true;
+        //[SerializeField] private bool m_allowControl = true;
 
 
         private Rigidbody m_rigidbody;
@@ -58,9 +58,9 @@ namespace CapsuleController
 
         [Header("Jump:")]
         [SerializeField] private float m_jumpForceFactor = 10f;
-        [SerializeField] private float m_riseGravityFactor = 5f;
+        //[SerializeField] private float m_riseGravityFactor = 5f;
         [SerializeField] private float m_fallGravityFactor = 10f;
-        [SerializeField] private float m_lowJumpFactor = 2.5f;
+        //[SerializeField] private float m_lowJumpFactor = 2.5f;
         [SerializeField] private float m_jumpBuffer = 0.15f;
         [SerializeField] private float m_coyoteTime = 0.25f;
         [SerializeField] private LayerMask m_whatIsGround;
@@ -79,7 +79,7 @@ namespace CapsuleController
         [SerializeField] private float m_wallrunAttachmentDistance = 1.5f;
         [SerializeField] private float m_wallrunStickDistance = 1f;
         [SerializeField] private float m_wallrunSlideAcceleration = 2f;
-        [SerializeField] private float m_wallrunMinimumIncline = 60;
+        //[SerializeField] private float m_wallrunMinimumIncline = 60;
         [SerializeField] private float m_wallrunRunSpeed = 1.5f;
         [SerializeField] private LayerMask m_wallrunnableLayers;
         [SerializeField] private float m_wallrunAttachmentForce = 4f;

@@ -81,7 +81,6 @@ namespace CapsuleController
             float targetVelocity = -_context.GlideMaxFallSpeed;
             float offset = targetVelocity - currentVelocity;
             float dragFactor = 1;
-            float velocityDragFactor = 0;
 
 
             if(currentVelocity != 0)

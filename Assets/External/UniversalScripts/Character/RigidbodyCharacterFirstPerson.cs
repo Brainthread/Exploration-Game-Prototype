@@ -10,7 +10,7 @@ public class RigidbodyCharacterFirstPerson : MonoBehaviour
     [SerializeField] private bool hasSprint = false;
     [SerializeField] private float sprintSpeed = 8f;
     [SerializeField] private float m_acceleration = 4f;
-    [SerializeField] private float directionSwitchForce = 4f;
+    //[SerializeField] private float directionSwitchForce = 4f;
     [SerializeField] private float directionSwitchThreshold = -0.45f;
 
     [Header("Jump")]
@@ -26,8 +26,8 @@ public class RigidbodyCharacterFirstPerson : MonoBehaviour
 
     [Header("Movement in Air")]
     [SerializeField] private float floatSpeed = 5f;
-    [SerializeField] private float airControlModifier = 0.1f;
-    [SerializeField] private float smoothingMaxDelta = 0.5f;
+    //[SerializeField] private float airControlModifier = 0.1f;
+    //[SerializeField] private float smoothingMaxDelta = 0.5f;
     [SerializeField] private float maxSlope = 45;
     [SerializeField] private float rayRange = 1.5f;
 

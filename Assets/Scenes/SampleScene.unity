@@ -4208,6 +4208,7 @@ GameObject:
   - component: {fileID: 1879394346}
   - component: {fileID: 1879394343}
   - component: {fileID: 1879394354}
+  - component: {fileID: 1879394355}
   m_Layer: 3
   m_Name: FPPlayer-Caps_state
   m_TagString: Untagged
@@ -4227,7 +4228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6ef749c16bc9554293a16b0334a2cef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_allowControl: 1
   m_groundedHeight: 1.7
   m_levitateHeight: 1.5
   m_rayToGroundLength: 3
@@ -4299,9 +4299,7 @@ MonoBehaviour:
     maxAccelForce: 45
     moveForceScale: {x: 0.1, y: 0, z: 0.1}
   m_jumpForceFactor: 8
-  m_riseGravityFactor: 1
   m_fallGravityFactor: 2
-  m_lowJumpFactor: 2.5
   m_jumpBuffer: 0.15
   m_coyoteTime: 0.25
   m_whatIsGround:
@@ -4318,7 +4316,6 @@ MonoBehaviour:
   m_wallrunAttachmentDistance: 0.8
   m_wallrunStickDistance: 0.8
   m_wallrunSlideAcceleration: 0.1
-  m_wallrunMinimumIncline: 60
   m_wallrunRunSpeed: 1.5
   m_wallrunnableLayers:
     serializedVersion: 2
@@ -4459,6 +4456,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_rigidbody: {fileID: 1879394348}
+--- !u!114 &1879394355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879394342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f360ed0fb0b19b34ca018c51c09b5137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numericPlayerAbilities: []
 --- !u!1 &1886662411
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,11 +7,11 @@ public class ThirdPersonCameraController : MonoBehaviour
     [SerializeField] private GameObject m_target;
 
     [SerializeField] private float m_targetDistance = 10f;
-    [SerializeField] private float m_minDistance = 3f;
-    [SerializeField] private float m_maxDistance = 10f;
+    //[SerializeField] private float m_minDistance = 3f;
+    //[SerializeField] private float m_maxDistance = 10f;
 
-    [SerializeField] private float m_followSpeed = 10f;
-    [SerializeField] private float m_dampener = 2f;
+    //[SerializeField] private float m_followSpeed = 10f;
+    //[SerializeField] private float m_dampener = 2f;
 
     [SerializeField] private float m_minElevation;
     [SerializeField] private float m_maxElevation;

@@ -43,9 +43,9 @@ namespace CapsuleController {
 
         [Header("Jump:")]
         [SerializeField] private float m_jumpForceFactor = 10f;
-        [SerializeField] private float m_riseGravityFactor = 5f;
+        //[SerializeField] private float m_riseGravityFactor = 5f;
         [SerializeField] private float m_fallGravityFactor = 10f;
-        [SerializeField] private float m_lowJumpFactor = 2.5f;
+        //[SerializeField] private float m_lowJumpFactor = 2.5f;
         [SerializeField] private float m_jumpBuffer = 0.15f;
         [SerializeField] private float m_coyoteTime = 0.25f;
         [SerializeField] private LayerMask m_whatIsGround;
@@ -63,6 +63,7 @@ namespace CapsuleController {
 
         private void Start()
         {
+            m_isJumping = false;
             m_rb = GetComponent<Rigidbody>();
             m_gravitationalForce = Physics.gravity * m_rb.mass;
         }
@@ -210,7 +211,7 @@ namespace CapsuleController {
 
         private void HandleJump(Vector3 jumpInput, bool grounded, RaycastHit rayHit)
         {
-            if (m_timeSinceJumpPressed < m_jumpBuffer)
+            if (m_timeSinceJumpPressed < m_jumpBuffer && !m_isJumping)
             {
                 if (m_timeSinceUngrounded < m_coyoteTime)
                 {

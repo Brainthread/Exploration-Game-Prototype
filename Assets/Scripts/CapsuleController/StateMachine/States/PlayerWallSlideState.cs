@@ -7,10 +7,8 @@ namespace CapsuleController
     {
         public PlayerWallSlideState(PlayerMovementStateMachine context, PlayerStateFactory factory) : base(context, factory) { }
         private Vector3 lastInput = Vector3.zero;
-        bool active;
         public override void EnterState()
         {
-            active = true;
             _context.PhysicsBody.useGravity = false;
             Vector3 velocity = _context.PhysicsBody.velocity;
             velocity.y = 0;

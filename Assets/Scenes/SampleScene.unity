@@ -2248,7 +2248,7 @@ GameObject:
   m_Component:
   - component: {fileID: 884813143}
   m_Layer: 0
-  m_Name: TalismanSpawn
+  m_Name: RightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2745,7 +2745,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1361381889}
   m_Layer: 0
-  m_Name: BookSpawn
+  m_Name: LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2759,7 +2759,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1361381888}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.547, y: 0, z: 0}
+  m_LocalPosition: {x: -0.38, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4470,6 +4470,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _numericPlayerAbilities:
   - {fileID: 11400000, guid: 0c10f9bb846a24e44a4d3a67b8fb1531, type: 2}
+  _leftHand: {fileID: 1361381888}
+  _rightHand: {fileID: 884813142}
 --- !u!1 &1886662411
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,7 @@ public class Seedbag_Propeller : PlayerAbility
     private float _holdTime;
     private bool _holding = false;
     private PlayerAbilityManager _manager;
+    private Transform _spawnPos; 
 
     public override void AbilityActivation()
     {
@@ -46,11 +47,15 @@ public class Seedbag_Propeller : PlayerAbility
         float speedFactor = _holdTime / _maxHoldTime;
         float speed = Mathf.Lerp(_minThrowSpeed, _maxThrowSpeed, speedFactor);
         Debug.Log("Send projectile with speed " + speed);
+        GameObject projectile = Instantiate(_projectilePrefab, _spawnPos.transform.position, _spawnPos.transform.rotation);
+        Vector3 relativeSpeed = Vector3.zero;//_manager.transform.GetComponent<Rigidbody>().velocity;
+        projectile.GetComponent<Seed_Propeller>().Initialize(speed, relativeSpeed);
     }
 
     public override void Initialize(PlayerAbilityManager manager)
     {
         _manager = manager;
+        _spawnPos = manager.RightHand.transform;
     }
 
     public override void AbilityDisable()

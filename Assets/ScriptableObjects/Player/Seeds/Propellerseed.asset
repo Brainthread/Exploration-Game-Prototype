@@ -12,3 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88744a0a437ca00458578583fcf584a9, type: 3}
   m_Name: Propellerseed
   m_EditorClassIdentifier: 
+  _projectilePrefab: {fileID: 8117590548135845892, guid: 477782549b3bad743951ee94a7013d51, type: 3}
+  _maxHoldTime: 1
+  _minThrowSpeed: 4
+  _maxThrowSpeed: 32

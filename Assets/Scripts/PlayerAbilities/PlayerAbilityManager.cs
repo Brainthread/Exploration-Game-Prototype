@@ -11,12 +11,16 @@ public class PlayerAbilityManager : MonoBehaviour
     private int _lastNumericAbilityIndex = -1;
     private PlayerAbility _activeAbility = null;
     private string _numericAbilityInput = "Fire2";
+    private GameObject _leftHand;
+
+    public GameObject LeftHand { get => _leftHand; }
 
     void Start()
     {
         for(int i = 0; i < _numericPlayerAbilities.Length; i++)
         {
             _numericPlayerAbilities[i] = Instantiate(_numericPlayerAbilities[i]);
+            _numericPlayerAbilities[i].Initialize(this);
         }
     }
 
